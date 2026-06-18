@@ -483,6 +483,62 @@
         .toast i {
             color: var(--primary);
         }
+
+        /* ==========================================
+           RESPONSIVE DESIGN (MOBILE & IFRAME)
+           ========================================== */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column !important;
+            }
+            .sidebar {
+                width: 100% !important;
+                position: static !important;
+                border-right: none !important;
+                border-bottom: 1px solid var(--border-color) !important;
+                padding: 24px !important;
+                gap: 20px !important;
+            }
+            .toc-menu {
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                gap: 8px !important;
+            }
+            .toc-item {
+                padding: 8px 12px !important;
+                font-size: 12px !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                padding: 24px 12px !important;
+                width: 100% !important;
+                min-height: auto !important;
+            }
+            .toolbar {
+                margin-bottom: 24px !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 16px !important;
+            }
+            .right-controls {
+                justify-content: space-between !important;
+                width: 100% !important;
+            }
+            .book-page {
+                padding: 40px 20px !important;
+                min-height: auto !important;
+            }
+            .chapter-header {
+                margin-bottom: 32px !important;
+            }
+            .chapter-body {
+                font-size: 15px !important;
+                line-height: 1.7 !important;
+            }
+            .page-footer {
+                margin-top: 24px !important;
+            }
+        }
     </style>
 </head>
 <body class="theme-cream">
