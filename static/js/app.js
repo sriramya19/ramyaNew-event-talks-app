@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         copyTweetBtn: document.getElementById('copy-tweet-btn'),
         postXBtn: document.getElementById('post-x-btn'),
         exportCsvBtn: document.getElementById('export-csv-btn'),
+        scrollTopBtn: document.getElementById('scroll-top-btn'),
         
         toastContainer: document.getElementById('toast-container')
     };
@@ -67,6 +68,18 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.postXBtn.addEventListener('click', postTweetToX);
     elements.exportCsvBtn.addEventListener('click', exportToCSV);
     elements.tweetTextarea.addEventListener('input', updateCharProgressBar);
+
+    // Back to Top Button Actions
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            elements.scrollTopBtn.classList.remove('hidden');
+        } else {
+            elements.scrollTopBtn.classList.add('hidden');
+        }
+    });
+    elements.scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
     // Filter Pills Event Delegation
     elements.filterPills.addEventListener('click', (e) => {
@@ -100,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.status === 'success' || data.status === 'warning') {
                 state.updates = data.releases;
                 calculateStats();
+                updateFilterPillCounts();
                 renderTimeline();
                 showState('content');
                 
@@ -241,6 +255,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     e.stopPropagation();
                     const cleanText = `${update.title}\n\n${cleanHtml(update.html_content)}`;
                     copyToClipboard(cleanText);
+                    
+                    // Direct icon checkmark visual feedback
+                    const copyBtn = card.querySelector('.copy-action');
+                    const icon = copyBtn.querySelector('i');
+                    icon.className = 'fa-solid fa-check';
+                    icon.style.color = 'var(--primary)';
+                    setTimeout(() => {
+                        icon.className = 'fa-regular fa-copy';
+                        icon.style.color = '';
+                    }, 1500);
+
                     showToast('Copied update to clipboard', 'info');
                 });
 
@@ -481,17 +506,49 @@ document.addEventListener('DOMContentLoaded', () => {
         toast.innerHTML = `
             <i class="fa-solid ${icon}"></i>
             <span>${message}</span>
+            <button class="toast-close" aria-label="Close alert"><i class="fa-solid fa-xmark"></i></button>
         `;
         
+        // Bind click on close button
+        toast.querySelector('.toast-close').addEventListener('click', (e) => {
+            e.stopPropagation();
+            toast.remove();
+        });
+
         elements.toastContainer.appendChild(toast);
         
         // Exit animation timer
         setTimeout(() => {
-            toast.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(50px)';
-            setTimeout(() => toast.remove(), 400);
+            if (toast.parentNode) {
+                toast.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(50px)';
+                setTimeout(() => toast.remove(), 400);
+            }
         }, 4000);
+    }
+
+    function updateFilterPillCounts() {
+        const counts = {
+            all: state.updates.length,
+            Advisors: state.updates.filter(u => u.category === 'Advisors').length,
+            'Tool Calling & MCP': state.updates.filter(u => u.category === 'Tool Calling & MCP').length,
+            'Models & Providers': state.updates.filter(u => u.category === 'Models & Providers').length,
+            'Vector Databases': state.updates.filter(u => u.category === 'Vector Databases').length,
+            'Structured Output': state.updates.filter(u => u.category === 'Structured Output').length,
+            General: state.updates.filter(u => u.category === 'General').length
+        };
+
+        elements.filterPills.querySelectorAll('.pill').forEach(pill => {
+            const filter = pill.dataset.filter;
+            const count = counts[filter] !== undefined ? counts[filter] : 0;
+            
+            let label = filter;
+            if (filter === 'all') label = 'All Updates';
+            else if (filter === 'Vector Databases') label = 'Vector DBs';
+            
+            pill.textContent = `${label} (${count})`;
+        });
     }
 
     function exportToCSV() {
