@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearSelectionBtn: document.getElementById('clear-selection-btn'),
         copyTweetBtn: document.getElementById('copy-tweet-btn'),
         postXBtn: document.getElementById('post-x-btn'),
+        exportCsvBtn: document.getElementById('export-csv-btn'),
         
         toastContainer: document.getElementById('toast-container')
     };
@@ -64,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.clearSelectionBtn.addEventListener('click', clearAllSelections);
     elements.copyTweetBtn.addEventListener('click', copyTweetToClipboard);
     elements.postXBtn.addEventListener('click', postTweetToX);
+    elements.exportCsvBtn.addEventListener('click', exportToCSV);
     elements.tweetTextarea.addEventListener('input', updateCharProgressBar);
 
     // Filter Pills Event Delegation
@@ -490,6 +492,43 @@ document.addEventListener('DOMContentLoaded', () => {
             toast.style.transform = 'translateX(50px)';
             setTimeout(() => toast.remove(), 400);
         }, 4000);
+    }
+
+    function exportToCSV() {
+        const filtered = filterUpdates();
+        if (filtered.length === 0) {
+            showToast('No updates to export', 'error');
+            return;
+        }
+
+        const headers = ['Version', 'Category', 'Sub-Category', 'Title', 'Description', 'Link'];
+        
+        const rows = filtered.map(u => [
+            u.version,
+            u.category,
+            u.sub_category,
+            u.title,
+            cleanHtml(u.html_content),
+            u.link
+        ]);
+
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.map(val => `"${String(val).replace(/"/g, '""')}"`).join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', `spring_ai_release_notes.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showToast(`Exported ${filtered.length} updates to CSV`, 'success');
     }
 
     // ==========================================
