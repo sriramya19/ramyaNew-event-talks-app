@@ -1,5 +1,5 @@
-# airelease https://codelabs.developers.google.com/antigravity-cli-hands-on#6 
-Spring AI Release Notes Monitor and Social Sharer.Let's use Antigravity CLI to vibe code an application. We will ask Antigravity CLI to generate an application and then push the initial version to a GitHub repository.
+# airelease 
+Spring AI Release Notes Monitor and Social Sharer.Let's use Antigravity CLI to vibe code an application. We will ask Antigravity CLI to generate an application and then push the initial version to a GitHub repository. Reference https://codelabs.developers.google.com/antigravity-cli-hands-on#6 
 
 <img width="2890" height="1626" alt="image" src="https://github.com/user-attachments/assets/a8ea4ef0-55bf-4cba-9824-e89c16da8798" />
 
