@@ -553,6 +553,7 @@
                 <option value="imp_plan">Release Pulse Plan</option>
                 <option value="upgrade_notes">Spring AI Upgrade Notes</option>
                 <option value="source_code">Project Source Code</option>
+                <option value="java_doc">Java Equivalent Guide</option>
             </select>
         </div>
 
@@ -3377,6 +3378,91 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, () =&gt; {
                     </div>
                 </div>
             </div>
+            <!-- BOOK 6: JAVA EQUIVALENT GUIDE -->
+            <div class="book-section" id="book-java_doc">
+                <!-- Page 0: Title Page -->
+                <div class="chapter-container" data-chapter="0">
+                    <div style="text-align: center; margin-top: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                        <div style="font-size: 36px; color: var(--primary); margin-bottom: 24px;"><i class="fa-solid fa-mug-hot"></i></div>
+                        <h1 style="font-family: var(--font-display); font-size: 30px; font-weight: 800; line-height: 1.4; margin-bottom: 16px;">Spring AI Release Pulse</h1>
+                        <p style="font-family: var(--font-display); font-size: 13px; letter-spacing: 0.2em; color: var(--text-secondary); margin-bottom: 48px;">Java Equivalent Port</p>
+                        <div style="width: 80px; height: 1px; background-color: var(--border-color); margin: 0 auto 30px auto;"></div>
+                        <p style="font-style: italic; color: var(--text-secondary); font-size: 15px; max-width: 340px; margin: 0 auto;">"A detailed guide to the Spring Boot component architecture, JSoup scraper pipelines, and snake_case Jackson mappings."</p>
+                    </div>
+                </div>
+
+                <!-- Page 1: Chapter 1 Architecture -->
+                <div class="chapter-container" data-chapter="1">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter I</h3>
+                        <h1 class="chap-title">Component Architecture</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>The Java version of the Spring AI Release Pulse is architected as a Spring Boot application utilizing standard enterprise components. Instead of micro-framework Flask controllers and manual HTTP client libraries, it leverages dependency injection, structured records, and auto-configured JSON serialization templates.</p>
+                        
+                        <div class="mermaid-container" style="margin-top: 30px; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.02); overflow-x: auto;">
+                            <pre class="mermaid" style="text-align: center;">
+flowchart TD
+    subgraph SpringBootApp [Spring Boot Web Application]
+        Controller[ReleaseController] -->|Injects Service| Service[ScraperService]
+        Service -->|Compiles Data| Record[ReleaseUpdate Record]
+        Controller -->|Serializes JSON via Jackson| WebClient[Client Browser App]
+    end
+    
+    subgraph External [External Connections]
+        Service -->|Scrapes with JSoup| Docs[docs.spring.io/upgrade-notes.html]
+        WebClient -->|Serves Static Files| Static[Static resources index.html/css/js]
+    end
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 2: Chapter 2 Flow -->
+                <div class="chapter-container" data-chapter="2">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter II</h3>
+                        <h1 class="chap-title">Data & Architecture Flows</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>Data is retrieved on-demand when the client queries the API. To guarantee speed and protect the Spring documentation servers from high request frequencies, the Java backend incorporates a synchronized in-memory caching mechanism. If the cache is empty or if a force-refresh query parameter is supplied, JSoup initializes a GET request with specific User-Agent headers, downloads the source document, and extracts the release updates.</p>
+                        
+                        <div class="mermaid-container" style="margin-top: 30px; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.02); overflow-x: auto;">
+                            <pre class="mermaid" style="text-align: center;">
+sequenceDiagram
+    autonumber
+    participant Browser as Client Browser
+    participant Controller as ReleaseController
+    participant Service as ScraperService
+    participant Docs as docs.spring.io
+    
+    Browser->>Controller: GET /api/releases?force=true
+    Controller->>Service: getReleases(forceRefresh=true)
+    Service->>Docs: Connect & GET upgrade-notes.html (JSoup)
+    Docs-->>Service: Return HTML response body
+    Service->>Service: Parse DOM sections and match categories
+    Service-->>Controller: Return List&lt;ReleaseUpdate&gt;
+    Controller-->>Browser: Return 200 OK (snake_case JSON via Jackson)
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 3: Chapter 3 Code Sync -->
+                <div class="chapter-container" data-chapter="3">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter III</h3>
+                        <h1 class="chap-title">Jackson & Static Configurations</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>Two critical components make the Spring Boot application fully compatible with the existing frontend dashboard designed for Flask:</p>
+                        <ul>
+                            <li><strong>Jackson Snake Case Property Naming Strategy</strong>: Standard Java variables use camelCase (e.g. <code>subCategory</code>, <code>htmlContent</code>), while the frontend client script (<code>app.js</code>) reads snake_case fields (<code>sub_category</code>, <code>html_content</code>). Specifying <code>spring.jackson.property-naming-strategy=SNAKE_CASE</code> resolves this automatically.</li>
+                            <li><strong>Static Resource Mapping</strong>: Spring Boot serves static assets placed inside <code>src/main/resources/static/</code> directly at the root. The HTML file was updated from Flask's <code>url_for('static', filename='...')</code> helper syntax to standard relative routes (e.g. <code>js/app.js</code>, <code>css/style.css</code>) to load correctly in Java.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </article>
 
         <!-- Pagination Controls -->
@@ -3440,6 +3526,18 @@ document.addEventListener(&#x27;DOMContentLoaded&#x27;, () =&gt; {
                     { label: "index.html", icon: "fa-html5" },
                     { label: "style.css", icon: "fa-css3-alt" },
                     { label: "app.js", icon: "fa-js" }
+                ]
+            },
+            java_doc: {
+                title: "Java Equivalent",
+                meta: "Spring Boot Guide",
+                audio: "",
+                totalPages: 4,
+                toc: [
+                    { label: "Title Page", icon: "fa-feather" },
+                    { label: "Chapter I: Architecture", icon: "fa-sitemap" },
+                    { label: "Chapter II: Flow Diagrams", icon: "fa-diagram-project" },
+                    { label: "Chapter III: Code Sync", icon: "fa-code" }
                 ]
             },
             upgrade_notes: {
