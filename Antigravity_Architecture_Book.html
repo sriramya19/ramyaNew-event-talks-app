@@ -554,6 +554,7 @@
                 <option value="upgrade_notes">Spring AI Upgrade Notes</option>
                 <option value="source_code">Project Source Code</option>
                 <option value="java_doc">Java Equivalent Guide</option>
+                <option value="java_source">Java Source Code</option>
             </select>
         </div>
 
@@ -3463,6 +3464,602 @@ sequenceDiagram
                     </div>
                 </div>
             </div>
+            <!-- BOOK 7: JAVA SOURCE CODE -->
+            <div class="book-section" id="book-java_source">
+                <!-- Page 0: Title Page -->
+                <div class="chapter-container" data-chapter="0">
+                    <div style="text-align: center; margin-top: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                        <div style="font-size: 36px; color: var(--primary); margin-bottom: 24px;"><i class="fa-solid fa-mug-saucer"></i></div>
+                        <h1 style="font-family: var(--font-display); font-size: 30px; font-weight: 800; line-height: 1.4; margin-bottom: 16px;">Java Source Code</h1>
+                        <p style="font-family: var(--font-display); font-size: 13px; letter-spacing: 0.2em; color: var(--text-secondary); margin-bottom: 48px;">Spring Boot Scraper Edition</p>
+                        <div style="width: 80px; height: 1px; background-color: var(--border-color); margin: 0 auto 30px auto;"></div>
+                        <p style="font-style: italic; color: var(--text-secondary); font-size: 15px; max-width: 340px; margin: 0 auto;">"Line-by-line documented code repository for the Java Spring Boot backend, controllers, and launcher scripts."</p>
+                    </div>
+                </div>
+
+                <!-- Page 1: pom.xml -->
+                <div class="chapter-container" data-chapter="1">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Maven Configuration</h3>
+                        <h1 class="chap-title">pom.xml</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!-- Define parent configuration block for Maven building --&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;!-- Specify the Maven project model version --&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    
+    &lt;!-- Inherit configurations from Spring Boot Starter Parent framework --&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;3.2.5&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    
+    &lt;!-- Unique namespace group identifier of our app package --&gt;
+    &lt;groupId&gt;com.example&lt;/groupId&gt;
+    &lt;!-- Build target asset name of the package archive --&gt;
+    &lt;artifactId&gt;release-pulse&lt;/artifactId&gt;
+    &lt;!-- Version configuration representing this build release state --&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;!-- Human-readable application title name --&gt;
+    &lt;name&gt;release-pulse&lt;/name&gt;
+    &lt;!-- Project description summary --&gt;
+    &lt;description&gt;Spring AI Release Pulse Java Equivalent&lt;/description&gt;
+    
+    &lt;!-- Define compile configurations and java build characteristics --&gt;
+    &lt;properties&gt;
+        &lt;!-- Specify Java version 17 target build requirement --&gt;
+        &lt;java.version&gt;17&lt;/java.version&gt;
+    &lt;/properties&gt;
+    
+    &lt;!-- Declare third-party library dependencies required by components --&gt;
+    &lt;dependencies&gt;
+        &lt;!-- Import Spring Boot Web Starter for REST endpoints and hosting --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;!-- Import JSoup HTML Parser for downloading and selecting HTML DOM trees --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jsoup&lt;/groupId&gt;
+            &lt;artifactId&gt;jsoup&lt;/artifactId&gt;
+            &lt;version&gt;1.17.2&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;!-- Import Spring Boot DevTools to activate hot restarts during code edits --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
+            &lt;optional&gt;true&lt;/optional&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    
+    &lt;!-- Configure build compilers and compilation plugins --&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;!-- Include Spring Boot Maven plugin to build executable fat JAR files --&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;</code></pre>
+                    </div>
+                </div>
+
+                <!-- Page 2: ReleasePulseApplication.java -->
+                <div class="chapter-container" data-chapter="2">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Bootstrap Class</h3>
+                        <h1 class="chap-title">ReleasePulseApplication.java</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-java">package com.example.releasepulse;
+
+// Import the SpringApplication runner class to execute the boot process
+import org.springframework.boot.SpringApplication;
+// Import the SpringBootApplication annotation to enable configuration scan and autowiring
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+/**
+ * Main application class to initialize and run the Spring Boot server.
+ */
+// Annotate class to designate it as the central configuration and bootstrap class
+@SpringBootApplication
+public class ReleasePulseApplication {
+    // Standard execution entry point method called when launching the Java JVM
+    public static void main(String[] args) {
+        // Delegate bootstrap sequence to SpringBoot runner by passing class configuration and args
+        SpringApplication.run(ReleasePulseApplication.class, args);
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Page 3: ReleaseUpdate.java -->
+                <div class="chapter-container" data-chapter="3">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Data Record Model</h3>
+                        <h1 class="chap-title">ReleaseUpdate.java</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-java">package com.example.releasepulse.model;
+
+/**
+ * Data record representing a structured release note card.
+ */
+// Define an immutable data carrier Record representing parsed update card attributes
+public record ReleaseUpdate(
+    // Unique card text identifier matched with HTML anchor element IDs
+    String id,
+    // Version label representing the parent release notes section (e.g. 2.0.0)
+    String version,
+    // Calculated categorization category string mapped using title heuristics
+    String category,
+    // Original category section header string retrieved from DOM h3 elements
+    String subCategory,
+    // Extracted header title string representing this specific update card
+    String title,
+    // Inner HTML details body content parsed from nested DOM elements
+    String htmlContent,
+    // Direct URL link pointing to the official documentation anchor section
+    String link
+) {}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Page 4: ScraperService.java -->
+                <div class="chapter-container" data-chapter="4">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">JSoup Scraper Service</h3>
+                        <h1 class="chap-title">ScraperService.java</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-java">package com.example.releasepulse.service;
+
+// Import the data carrier record class to capture update properties
+import com.example.releasepulse.model.ReleaseUpdate;
+// Import the central Jsoup entry class to execute HTTP requests and create Documents
+import org.jsoup.Jsoup;
+// Import Document class representing HTML DOM trees
+import org.jsoup.nodes.Document;
+// Import Element class representing HTML tag nodes
+import org.jsoup.nodes.Element;
+// Import Elements container wrapper class representing query lists of Elements
+import org.jsoup.select.Elements;
+// Import Service annotation to register this class as a Spring component bean
+import org.springframework.stereotype.Service;
+
+// Import IOException to intercept connection failures and timeout exceptions
+import java.io.IOException;
+// Import LocalDateTime class to retrieve local timestamps
+import java.time.LocalDateTime;
+// Import DateTimeFormatter class to build printable date-time string forms
+import java.time.format.DateTimeFormatter;
+// Import standard collections classes used to build maps, list, and arrays
+import java.util.*;
+// Import logging utilities to report scraper activity and trace connection logs
+import java.util.logging.Logger;
+
+// Designate class as a service layer component bean managed by Spring container
+@Service
+public class ScraperService {
+    // Instantiate a standard Logger named after this service class
+    private static final Logger logger = Logger.getLogger(ScraperService.class.getName());
+    // Define target upgrade notes URL for crawling
+    private static final String UPGRADE_NOTES_URL = &quot;https://docs.spring.io/spring-ai/reference/upgrade-notes.html&quot;;
+
+    // In-memory list cache to store parsed release updates records
+    private List&lt;ReleaseUpdate&gt; cachedUpdates = null;
+    // In-memory string cache to store the last refresh timestamp
+    private String lastUpdated = null;
+
+    // Define thread-safe public method to get release notes payload Map
+    public synchronized Map&lt;String, Object&gt; getReleases(boolean forceRefresh) throws IOException {
+        // If cache records exist and client did not request forced sync, return cache
+        if (cachedUpdates != null &amp;&amp; !forceRefresh) {
+            // Output log notice returning cache list
+            logger.info(&quot;Returning cached updates&quot;);
+            // Build response containing cache list and true cached flag
+            return buildResponse(cachedUpdates, true);
+        }
+
+        // Output log notice indicating active download
+        logger.info(&quot;Fetching and parsing live release notes...&quot;);
+        // Invoke local scrape routine to get fresh results
+        List&lt;ReleaseUpdate&gt; updates = fetchAndParse();
+        // Update local cache records list
+        cachedUpdates = updates;
+        // Save current timestamp formatted as Year-Month-Day Hour:Minute:Second
+        lastUpdated = LocalDateTime.now().format(DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm:ss&quot;));
+        // Return results and set cached flag to false
+        return buildResponse(updates, false);
+    }
+
+    // Define public method to retrieve cached updates safely without throwing exceptions
+    public synchronized Map&lt;String, Object&gt; getCachedUpdatesIfAvailable() {
+        // If cache list is populated
+        if (cachedUpdates != null) {
+            // Build and return cache map
+            return buildResponse(cachedUpdates, true);
+        }
+        // Return null if cache has not been populated yet
+        return null;
+    }
+
+    // Helper method to wrap data arrays into structured API response maps
+    private Map&lt;String, Object&gt; buildResponse(List&lt;ReleaseUpdate&gt; updates, boolean cached) {
+        // Instantiate a new HashMap container
+        Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();
+        // Set api response status field to success
+        response.put(&quot;status&quot;, &quot;success&quot;);
+        // Add the updates records list
+        response.put(&quot;releases&quot;, updates);
+        // Add the cache timestamp string
+        response.put(&quot;last_updated&quot;, lastUpdated);
+        // Add the boolean flag indicating if the data came from cache
+        response.put(&quot;cached&quot;, cached);
+        // Return the compiled Map
+        return response;
+    }
+
+    // Scrape routine that requests docs, parses DOM trees, and runs category mapping heuristics
+    private List&lt;ReleaseUpdate&gt; fetchAndParse() throws IOException {
+        // Request the HTML documentation using JSoup with specific agent headers and 20s timeout
+        Document doc = Jsoup.connect(UPGRADE_NOTES_URL)
+                .userAgent(&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&quot;)
+                .timeout(20000)
+                .get();
+
+        // Instantiate empty list to store compiled ReleaseUpdate records
+        List&lt;ReleaseUpdate&gt; updates = new ArrayList&lt;&gt;();
+        // Locate primary article container tag
+        Element mainDoc = doc.selectFirst(&quot;article.doc&quot;);
+        // If article.doc is missing, fallback to parsing body directly
+        if (mainDoc == null) {
+            // Assign body element as primary container
+            mainDoc = doc.body();
+            // If body is missing, return empty list immediately
+            if (mainDoc == null) return updates;
+        }
+
+        // Query all version section divisions
+        Elements sect1Divs = mainDoc.select(&quot;div.sect1&quot;);
+        // Iterate through all version containers
+        for (Element sect1 : sect1Divs) {
+            // Locate the section h2 heading element
+            Element h2 = sect1.selectFirst(&quot;h2&quot;);
+            // Skip section if header is missing
+            if (h2 == null) continue;
+
+            // Strip version label prefix to isolate pure numbers (e.g. 2.0.0)
+            String versionText = h2.text().replace(&quot;Upgrading to &quot;, &quot;&quot;).trim();
+
+            // Query all nested category subsections (sect2 divs)
+            Elements sect2Divs = sect1.select(&quot;div.sect2&quot;);
+            // Iterate through category subsection divs
+            for (Element sect2 : sect2Divs) {
+                // Locate the subsection h3 heading element
+                Element h3 = sect2.selectFirst(&quot;h3&quot;);
+                // Skip subsection if category header is missing
+                if (h3 == null) continue;
+
+                // Strip leading/trailing whitespaces from category header
+                String categoryText = h3.text().trim();
+                // Retrieve the id attribute representing the page anchor link segment
+                String categoryId = h3.id();
+
+                // Query all nested subheadings (sect3 divs) in this category
+                Elements sect3Divs = sect2.select(&quot;div.sect3&quot;);
+                // Setup flag indicator to evaluate subhead descriptive properties
+                boolean hasDescriptiveSubheadings = false;
+                // List generic headings indicating standard layouts
+                List&lt;String&gt; genericWords = Arrays.asList(&quot;impact&quot;, &quot;migration&quot;, &quot;why&quot;, &quot;detail&quot;);
+
+                // Evaluate subheads descriptive properties
+                for (Element sect3 : sect3Divs) {
+                    // Locate the h4 heading tag of this block
+                    Element h4 = sect3.selectFirst(&quot;h4&quot;);
+                    // If an h4 heading exists
+                    if (h4 != null) {
+                        // Clean and check heading text against generic patterns
+                        String h4Text = h4.text().toLowerCase().trim();
+                        boolean isGeneric = false;
+                        for (String gen : genericWords) {
+                            if (h4Text.contains(gen)) {
+                                isGeneric = true;
+                                break;
+                            }
+                        }
+                        // If the subheading represents a specific feature topic
+                        if (!isGeneric) {
+                            // Set descriptive flag to true
+                            hasDescriptiveSubheadings = true;
+                            // Break out of loop since one descriptive subhead is enough
+                            break;
+                        }
+                    }
+                }
+
+                // If descriptive subheads exist, parse each sect3 as an individual card
+                if (!sect3Divs.isEmpty() &amp;&amp; hasDescriptiveSubheadings) {
+                    for (Element sect3 : sect3Divs) {
+                        // Locate the h4 heading tag
+                        Element h4 = sect3.selectFirst(&quot;h4&quot;);
+                        // Skip if heading is missing
+                        if (h4 == null) continue;
+
+                        // Retrieve the heading title string
+                        String updateTitle = h4.text().trim();
+                        // Retrieve the anchor ID string of the update card
+                        String updateId = h4.id();
+
+                        // Accumulate outer HTML string of all child elements excluding the h4 title tag
+                        StringBuilder contentHtml = new StringBuilder();
+                        for (Element child : sect3.children()) {
+                            // Skip the title element node
+                            if (child.tagName().equals(&quot;h4&quot;)) continue;
+                            // Append the sibling element outer HTML
+                            contentHtml.append(child.outerHtml());
+                        }
+
+                        // Determine category tag string using mapping heuristics
+                        String cat = determineCategory(updateTitle, categoryText);
+                        // Add record to compilation list
+                        updates.add(new ReleaseUpdate(
+                                updateId.isEmpty() ? &quot;up-&quot; + updates.size() : updateId,
+                                versionText,
+                                cat,
+                                categoryText,
+                                updateTitle,
+                                contentHtml.toString().trim(),
+                                updateId.isEmpty() ? UPGRADE_NOTES_URL : UPGRADE_NOTES_URL + &quot;#&quot; + updateId
+                        ));
+                    }
+                // Else, consolidate the entire category section (sect2) into a single update card
+                } else {
+                    // Accumulate outer HTML string of all child elements excluding the h3 title tag
+                    StringBuilder contentHtml = new StringBuilder();
+                    for (Element child : sect2.children()) {
+                        // Skip the section title tag element node
+                        if (child.tagName().equals(&quot;h3&quot;)) continue;
+                        // Append the child element outer HTML
+                        contentHtml.append(child.outerHtml());
+                    }
+
+                    // Determine category tag string using mapping heuristics
+                    String cat = determineCategory(categoryText, &quot;&quot;);
+                    // Add consolidated record to compilation list
+                    updates.add(new ReleaseUpdate(
+                            categoryId.isEmpty() ? &quot;up-&quot; + updates.size() : categoryId,
+                            versionText,
+                            cat,
+                            &quot;General&quot;,
+                            categoryText,
+                            contentHtml.toString().trim(),
+                            categoryId.isEmpty() ? UPGRADE_NOTES_URL : UPGRADE_NOTES_URL + &quot;#&quot; + categoryId
+                    ));
+                }
+            }
+        }
+        // Return compiled updates list
+        return updates;
+    }
+
+    // Determine category based on checking title string and parent category string
+    private String determineCategory(String title, String parentCategory) {
+        // Convert terms to lowercase for robust match checks
+        String t = (title + &quot; &quot; + parentCategory).toLowerCase();
+        // Check for advisor words
+        if (t.contains(&quot;advisor&quot;) || t.contains(&quot;vector-store-advisor&quot;)) return &quot;Advisors&quot;;
+        // Check for tool calling words
+        if (t.contains(&quot;tool&quot;) || t.contains(&quot;mcp&quot;) || t.contains(&quot;callback&quot;) || t.contains(&quot;functioncall&quot;)) return &quot;Tool Calling &amp; MCP&quot;;
+        // Check for memory words
+        if (t.contains(&quot;memory&quot;) || t.contains(&quot;chatmemory&quot;) || t.contains(&quot;history&quot;)) return &quot;Chat Memory&quot;;
+        // Check for model provider words
+        if (t.contains(&quot;model&quot;) || t.contains(&quot;ollama&quot;) || t.contains(&quot;openai&quot;) || t.contains(&quot;minimax&quot;) || t.contains(&quot;genai&quot;) || t.contains(&quot;anthropic&quot;) || t.contains(&quot;vertex&quot;) || t.contains(&quot;bedrock&quot;)) return &quot;Models &amp; Providers&quot;;
+        // Check for structured converter words
+        if (t.contains(&quot;converter&quot;) || t.contains(&quot;schema&quot;) || t.contains(&quot;output&quot;) || t.contains(&quot;structured&quot;)) return &quot;Structured Output&quot;;
+        // Check for observability/span words
+        if (t.contains(&quot;observability&quot;) || t.contains(&quot;metric&quot;) || t.contains(&quot;span&quot;) || t.contains(&quot;trace&quot;) || t.contains(&quot;instrument&quot;)) return &quot;Observability&quot;;
+        // Check for database store words
+        if (t.contains(&quot;database&quot;) || t.contains(&quot;db&quot;) || t.contains(&quot;cosmos&quot;) || t.contains(&quot;cassandra&quot;) || t.contains(&quot;pgvector&quot;) || t.contains(&quot;store&quot;) || t.contains(&quot;vectordb&quot;)) return &quot;Vector Databases&quot;;
+        // Check for json jackson mapping helper words
+        if (t.contains(&quot;json&quot;) || t.contains(&quot;jackson&quot;) || t.contains(&quot;helper&quot;)) return &quot;JSON Utilities&quot;;
+        // Default category fallback string
+        return &quot;General&quot;;
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Page 5: ReleaseController.java -->
+                <div class="chapter-container" data-chapter="5">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">API REST Controller</h3>
+                        <h1 class="chap-title">ReleaseController.java</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-java">package com.example.releasepulse.controller;
+
+// Import the scraping service to retrieve parsed updates list
+import com.example.releasepulse.service.ScraperService;
+// Import HTTP Status constants for custom response header codes
+import org.springframework.http.HttpStatus;
+// Import ResponseEntity container class to return status codes and payloads
+import org.springframework.http.ResponseEntity;
+// Import GetMapping annotation to map requests to GET endpoints
+import org.springframework.web.bind.annotation.GetMapping;
+// Import RequestParam annotation to bind HTTP URL query parameters to Java variables
+import org.springframework.web.bind.annotation.RequestParam;
+// Import RestController annotation to mark this class as a REST JSON controller
+import org.springframework.web.bind.annotation.RestController;
+
+// Import standard IOException to handle networking and scrape errors
+import java.io.IOException;
+// Import HashMap class to construct warning and error response payloads
+import java.util.HashMap;
+// Import Map interface to return key-value dictionary formats
+import java.util.Map;
+
+// Designate class as a REST controller that handles incoming API request paths
+@RestController
+public class ReleaseController {
+    // Define a reference pointer targeting our custom ScraperService instance
+    private final ScraperService scraperService;
+
+    // Use constructor injection to autowire and instantiate ScraperService
+    public ReleaseController(ScraperService scraperService) {
+        // Bind the injected scraper service parameter to local field instance
+        this.scraperService = scraperService;
+    }
+
+    // Map incoming GET requests on path /api/releases to this handler method
+    @GetMapping(&quot;/api/releases&quot;)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; getReleases(
+            // Bind URL query query parameter &#x27;force&#x27; to boolean variable, default to false
+            @RequestParam(value = &quot;force&quot;, defaultValue = &quot;false&quot;) boolean force) {
+        // Intercept any potential scraping connection failures
+        try {
+            // Retrieve structured map response from service (scrapes or pulls from cache)
+            Map&lt;String, Object&gt; data = scraperService.getReleases(force);
+            // Return successful HTTP 200 OK along with releases data payload
+            return ResponseEntity.ok(data);
+        // Catch network time-outs or page fetch exceptions
+        } catch (IOException e) {
+            // Retrieve last cached records list to prevent client data failures
+            Map&lt;String, Object&gt; fallback = scraperService.getCachedUpdatesIfAvailable();
+            // If cache records exist, return cached copy with warning
+            if (fallback != null) {
+                // Initialize a new map copy to safely add warning messages
+                Map&lt;String, Object&gt; warningResponse = new HashMap&lt;&gt;(fallback);
+                // Set response warning label status
+                warningResponse.put(&quot;status&quot;, &quot;warning&quot;);
+                // Construct warning text containing the scrape exception message
+                warningResponse.put(&quot;message&quot;, &quot;Failed to refresh: &quot; + e.getMessage() + &quot;. Showing last cached version.&quot;);
+                // Return HTTP 200 OK containing fallback cached updates
+                return ResponseEntity.ok(warningResponse);
+            }
+            // If cache is empty and connection fails, build error payload
+            Map&lt;String, Object&gt; errorResponse = new HashMap&lt;&gt;();
+            // Set error label status
+            errorResponse.put(&quot;status&quot;, &quot;error&quot;);
+            // Set error message describing connection issue
+            errorResponse.put(&quot;message&quot;, e.getMessage());
+            // Provide empty array placeholder for releases field
+            errorResponse.put(&quot;releases&quot;, new Object[]{});
+            // Return HTTP 500 Server Error along with error description
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Page 6: application.properties -->
+                <div class="chapter-container" data-chapter="6">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Application Properties</h3>
+                        <h1 class="chap-title">application.properties</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-properties">server.port=5001
+spring.devtools.restart.enabled=true
+spring.jackson.property-naming-strategy=SNAKE_CASE
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- Page 7: run-java.ps1 -->
+                <div class="chapter-container" data-chapter="7">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Local Launcher Script</h3>
+                        <h1 class="chap-title">run-java.ps1</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-powershell"># Spring AI Release Pulse - Java Launcher Script
+# Set script directory as active location
+$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
+Set-Location $scriptPath
+
+Write-Host &quot;=============================================&quot; -ForegroundColor Green
+Write-Host &quot;   SPRING AI RELEASE PULSE - JAVA RUNNER    &quot; -ForegroundColor Green
+Write-Host &quot;=============================================&quot; -ForegroundColor Green
+Write-Host &quot;&quot;
+
+# 1. Check if Java is installed
+if (!(Get-Command java -ErrorAction SilentlyContinue)) {
+    Write-Host &quot;[ERROR] Java (JDK) was not found in your PATH. Please install JDK 17+.&quot; -ForegroundColor Red
+    Write-Host &quot;You can download it from: https://adoptium.net/&quot; -ForegroundColor Yellow
+    Read-Host &quot;Press Enter to exit&quot;
+    exit
+}
+
+# 2. Locate or download Maven
+$mvnCmd = &quot;mvn&quot;
+if (!(Get-Command mvn -ErrorAction SilentlyContinue)) {
+    # If global mvn is not found, check local Maven installation
+    $localMvnDir = Join-Path $scriptPath &quot;java-equivalent\maven\apache-maven-3.9.6\bin&quot;
+    $localMvnPath = Join-Path $localMvnDir &quot;mvn.cmd&quot;
+    
+    if (Test-Path $localMvnPath) {
+        Write-Host &quot;[INFO] Using local Maven installation found at $localMvnPath&quot; -ForegroundColor Cyan
+        $mvnCmd = $localMvnPath
+    } else {
+        Write-Host &quot;[INFO] Maven is not installed on this system.&quot; -ForegroundColor Yellow
+        Write-Host &quot;[INFO] Downloading standalone Apache Maven 3.9.6 locally (~10MB)...&quot; -ForegroundColor Cyan
+        
+        $mavenUrl = &quot;https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.zip&quot;
+        $mavenDir = Join-Path $scriptPath &quot;java-equivalent\maven&quot;
+        $zipPath = Join-Path $scriptPath &quot;java-equivalent\maven.zip&quot;
+        
+        # Create directories
+        if (!(Test-Path $mavenDir)) {
+            New-Item -ItemType Directory -Force -Path $mavenDir | Out-Null
+        }
+        
+        try {
+            Write-Host &quot;[INFO] Downloading from $mavenUrl ...&quot; -ForegroundColor Cyan
+            # Download file
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            Invoke-WebRequest -Uri $mavenUrl -OutFile $zipPath
+            
+            Write-Host &quot;[INFO] Extracting archive...&quot; -ForegroundColor Cyan
+            Expand-Archive -Path $zipPath -DestinationPath $mavenDir -Force
+            
+            # Clean up zip
+            Remove-Item -Path $zipPath -Force
+            
+            if (Test-Path $localMvnPath) {
+                Write-Host &quot;[SUCCESS] Local Maven downloaded and extracted successfully!&quot; -ForegroundColor Green
+                $mvnCmd = $localMvnPath
+            } else {
+                throw &quot;Maven executable not found after extraction at $localMvnPath&quot;
+            }
+        } catch {
+            Write-Host &quot;[ERROR] Failed to download or extract Maven: $_&quot; -ForegroundColor Red
+            Write-Host &quot;Please install Maven manually or add it to your PATH.&quot; -ForegroundColor Yellow
+            Read-Host &quot;Press Enter to exit&quot;
+            exit
+        }
+    }
+}
+
+# 3. Go to java directory
+Set-Location java-equivalent
+
+# 4. Compile and Run Spring Boot Application
+Write-Host &quot;[INFO] Running Spring Boot application using: $mvnCmd&quot; -ForegroundColor Cyan
+&amp; $mvnCmd spring-boot:run
+</code></pre>
+                    </div>
+                </div>
+            </div>
         </article>
 
         <!-- Pagination Controls -->
@@ -3538,6 +4135,22 @@ sequenceDiagram
                     { label: "Chapter I: Architecture", icon: "fa-sitemap" },
                     { label: "Chapter II: Flow Diagrams", icon: "fa-diagram-project" },
                     { label: "Chapter III: Code Sync", icon: "fa-code" }
+                ]
+            },
+            java_source: {
+                title: "Java Source Code",
+                meta: "Spring Boot Files",
+                audio: "",
+                totalPages: 8,
+                toc: [
+                    { label: "Title Page", icon: "fa-feather" },
+                    { label: "pom.xml", icon: "fa-code" },
+                    { label: "Application.java", icon: "fa-mug-hot" },
+                    { label: "ReleaseUpdate.java", icon: "fa-database" },
+                    { label: "ScraperService.java", icon: "fa-gears" },
+                    { label: "ReleaseController.java", icon: "fa-network-wired" },
+                    { label: "application.properties", icon: "fa-sliders" },
+                    { label: "run-java.ps1", icon: "fa-terminal" }
                 ]
             },
             upgrade_notes: {

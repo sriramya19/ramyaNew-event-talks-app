@@ -1,43 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Define parent configuration block for Maven building -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- Specify the Maven project model version -->
     <modelVersion>4.0.0</modelVersion>
+    
+    <!-- Inherit configurations from Spring Boot Starter Parent framework -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    
+    <!-- Unique namespace group identifier of our app package -->
     <groupId>com.example</groupId>
+    <!-- Build target asset name of the package archive -->
     <artifactId>release-pulse</artifactId>
+    <!-- Version configuration representing this build release state -->
     <version>0.0.1-SNAPSHOT</version>
+    <!-- Human-readable application title name -->
     <name>release-pulse</name>
+    <!-- Project description summary -->
     <description>Spring AI Release Pulse Java Equivalent</description>
+    
+    <!-- Define compile configurations and java build characteristics -->
     <properties>
+        <!-- Specify Java version 17 target build requirement -->
         <java.version>17</java.version>
     </properties>
+    
+    <!-- Declare third-party library dependencies required by components -->
     <dependencies>
-        <!-- Spring Boot Web starter for REST services and static resource hosting -->
+        <!-- Import Spring Boot Web Starter for REST endpoints and hosting -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!-- JSoup for scraping and parsing HTML content -->
+        <!-- Import JSoup HTML Parser for downloading and selecting HTML DOM trees -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.17.2</version>
         </dependency>
-        <!-- Spring Boot DevTools for hot reloading -->
+        <!-- Import Spring Boot DevTools to activate hot restarts during code edits -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
     </dependencies>
+    
+    <!-- Configure build compilers and compilation plugins -->
     <build>
         <plugins>
+            <!-- Include Spring Boot Maven plugin to build executable fat JAR files -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
