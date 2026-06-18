@@ -4,3 +4,8 @@ Spring AI Release Notes Monitor and Social Sharer.Let's use Antigravity CLI to v
 <img width="2890" height="1626" alt="image" src="https://github.com/user-attachments/assets/a8ea4ef0-55bf-4cba-9824-e89c16da8798" />
 
 <img width="2656" height="1566" alt="image" src="https://github.com/user-attachments/assets/9613dac9-65be-495e-bcda-a5d8c56ab669" />
+
+<img width="2606" height="1616" alt="image" src="https://github.com/user-attachments/assets/f666ce5f-3194-46c8-8c99-e6bfd8f1766e" />
+
+<img width="2688" height="1592" alt="image" src="https://github.com/user-attachments/assets/31522258-3f46-4d48-aa9d-6ccd5cb69430" />
+
