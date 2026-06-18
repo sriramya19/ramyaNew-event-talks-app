@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity Architecture - Book Edition</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Mermaid.js for diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        /* Mermaid styling and Dark Mode adjustments */
+        .mermaid {
+            background: transparent !important;
+            font-family: var(--font-sans) !important;
+        }
+        .theme-dark .mermaid svg {
+            filter: invert(0.9) hue-rotate(180deg);
+        }
+        .theme-sepia .mermaid svg {
+            filter: sepia(0.3) contrast(1.1);
+        }
+        :root {
+            /* Typography */
+            --font-serif: 'Lora', Georgia, serif;
+            --font-display: 'Cinzel', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+
+            /* Page themes (Warm Cream/Paper default) */
+            --bg-book: #fcf9f2;
+            --bg-sidebar: #f5f0e3;
+            --text-main: #2e251e;
+            --text-secondary: #5c4d40;
+            --text-muted: #8c7a6b;
+            --border-color: rgba(46, 37, 30, 0.1);
+            --primary: #9d7b32;
+            --primary-light: rgba(157, 123, 50, 0.1);
+            --shadow-book: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Sepia Theme */
+        .theme-sepia {
+            --bg-book: #f3e6ca;
+            --bg-sidebar: #e9dab5;
+            --text-main: #3e2712;
+            --text-secondary: #5c3f25;
+            --text-muted: #82634a;
+            --border-color: rgba(62, 39, 18, 0.12);
+            --primary: #855325;
+            --primary-light: rgba(133, 83, 37, 0.12);
+        }
+
+        /* Dark Velvet Theme */
+        .theme-dark {
+            --bg-book: #12161a;
+            --bg-sidebar: #191f24;
+            --text-main: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #475569;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary: #dfb15b;
+            --primary-light: rgba(223, 177, 91, 0.15);
+            --shadow-book: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            background-color: var(--bg-sidebar);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            transition: var(--transition);
+        }
+
+        /* ==========================================
+           SIDEBAR TABLE OF CONTENTS
+           ========================================== */
+
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .book-title-area {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .book-title-area span.meta {
+            font-family: var(--font-sans);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--primary);
+        }
+
+        .book-title-area h2 {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .toc-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            list-style: none;
+        }
+
+        .toc-item {
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toc-item:hover, .toc-item.active {
+            color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .toc-item.active {
+            font-weight: 700;
+        }
+
+        .toc-item i {
+            width: 16px;
+            font-size: 12px;
+        }
+
+        /* Reading Progress */
+        .progress-container {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-label {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar-wrap {
+            width: 100%;
+            height: 4px;
+            background-color: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        /* ==========================================
+           MAIN CONTENT CONTAINER
+           ========================================== */
+
+        .main-content {
+            margin-left: 280px;
+            flex-grow: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        /* Reader Preferences Toolbar */
+        .toolbar {
+            width: 100%;
+            max-width: 680px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .audio-player-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--primary-light);
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .audio-player-wrapper i {
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        #book-audio {
+            height: 28px;
+            width: 200px;
+            outline: none;
+        }
+
+        .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .theme-selectors {
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease;
+        }
+
+        .theme-dot:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-dot.cream { background-color: #fcf9f2; }
+        .theme-dot.sepia { background-color: #f3e6ca; }
+        .theme-dot.dark { background-color: #12161a; }
+
+        .font-adjust {
+            display: flex;
+            gap: 4px;
+            background-color: var(--primary-light);
+            border-radius: 6px;
+            padding: 2px;
+        }
+
+        .btn-font {
+            border: none;
+            background: transparent;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .btn-font:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--primary);
+        }
+
+        /* ==========================================
+           THE BOOK PAGE (SHEET EFFECT)
+           ========================================== */
+
+        .book-page {
+            width: 100%;
+            max-width: 680px;
+            background-color: var(--bg-book);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow-book);
+            padding: 80px 70px;
+            min-height: 720px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        /* Ribbon Bookmark */
+        .bookmark-ribbon {
+            position: absolute;
+            top: -1px;
+            right: 40px;
+            width: 24px;
+            height: 44px;
+            background-color: var(--primary);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+            cursor: pointer;
+            opacity: 0.15;
+            transition: opacity 0.2s ease;
+        }
+
+        .bookmark-ribbon.saved {
+            opacity: 0.95;
+        }
+
+        /* Chapter Layout */
+        .chapter-container {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            animation: pageFade 0.4s ease forwards;
+        }
+
+        .chapter-container.active {
+            display: flex;
+        }
+
+        @keyframes pageFade {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .chapter-header h3.chap-number {
+            font-family: var(--font-display);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .chapter-header h1.chap-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--text-main);
+        }
+
+        .chapter-body {
+            font-size: 17px;
+            line-height: 1.8;
+            color: var(--text-main);
+            text-align: justify;
+        }
+
+        /* Book Drop Cap */
+        .chapter-body p:first-of-type::first-letter {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            float: left;
+            margin: 6px 12px 0 0;
+            color: var(--primary);
+            font-weight: 800;
+            line-height: 0.8;
+        }
+
+        .chapter-body p {
+            margin-bottom: 24px;
+            text-indent: 20px;
+        }
+
+        .chapter-body p.no-indent, .chapter-body p:first-of-type {
+            text-indent: 0;
+        }
+
+        .chapter-body ul {
+            margin-left: 24px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chapter-body li {
+            color: var(--text-secondary);
+        }
+
+        .chapter-body strong {
+            color: var(--text-main);
+        }
+
+        /* ==========================================
+           PAGINATION FOOTER
+           ========================================== */
+
+        .page-footer {
+            margin-top: 40px;
+            width: 100%;
+            max-width: 680px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-page {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .btn-page:hover:not(:disabled) {
+            color: var(--primary);
+        }
+
+        .btn-page:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* ==========================================
+           TOAST NOTIFICATIONS
+           ========================================== */
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            padding: 12px 20px;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            box-shadow: var(--shadow-book);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(50px);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .toast.active {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .toast i {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body class="theme-cream">
+
+    <!-- Sidebar T.O.C -->
+    <aside class="sidebar">
+        <div class="book-title-area">
+            <span class="meta">Architectural Guide</span>
+            <h2>Antigravity CLI</h2>
+        </div>
+        <ul class="toc-menu">
+            <li class="toc-item active" data-page="0"><i class="fa-solid fa-feather"></i> Title Page</li>
+            <li class="toc-item" data-page="1"><i class="fa-solid fa-layer-group"></i> Chapter I</li>
+            <li class="toc-item" data-page="2"><i class="fa-solid fa-arrows-spin"></i> Chapter II</li>
+            <li class="toc-item" data-page="3"><i class="fa-solid fa-shield-halved"></i> Chapter III</li>
+            <li class="toc-item" data-page="4"><i class="fa-solid fa-puzzle-piece"></i> Chapter IV</li>
+            <li class="toc-item" data-page="5"><i class="fa-solid fa-gears"></i> Chapter V</li>
+        </ul>
+
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Reading Progress</span>
+                <span id="progress-pct">0%</span>
+            </div>
+            <div class="progress-bar-wrap">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Container -->
+    <main class="main-content">
+        <!-- Reader Bar -->
+        <header class="toolbar">
+            <div class="audio-player-wrapper" title="Listen to Audiobook Edition">
+                <i class="fa-solid fa-volume-high"></i>
+                <audio id="book-audio" src="Videos/architecture_audio.wav" controls></audio>
+            </div>
+            <div class="right-controls">
+                <div class="theme-selectors" title="Select Theme">
+                    <div class="theme-dot cream" onclick="changeTheme('cream')"></div>
+                    <div class="theme-dot sepia" onclick="changeTheme('sepia')"></div>
+                    <div class="theme-dot dark" onclick="changeTheme('dark')"></div>
+                </div>
+                <div class="font-adjust" title="Adjust Font Size">
+                    <button class="btn-font" onclick="adjustFont(-1)">A-</button>
+                    <button class="btn-font" onclick="adjustFont(1)">A+</button>
+                </div>
+                <button class="btn-font" onclick="saveBookmark()" title="Save Bookmark"><i class="fa-regular fa-bookmark"></i> Bookmark</button>
+            </div>
+        </header>
+
+        <!-- Book Sheet -->
+        <article class="book-page" id="book-page">
+            <div class="bookmark-ribbon" id="bookmark-ribbon" onclick="loadBookmark()" title="Load Bookmark"></div>
+
+            <!-- Page 0: Title Page -->
+            <div class="chapter-container active" data-chapter="0">
+                <div style="text-align: center; margin-top: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                    <div style="font-size: 36px; color: var(--primary); margin-bottom: 24px;"><i class="fa-solid fa-dharmachakra"></i></div>
+                    <h1 style="font-family: var(--font-display); font-size: 30px; font-weight: 800; line-height: 1.4; margin-bottom: 16px;">Antigravity Architecture</h1>
+                    <p style="font-family: var(--font-display); font-size: 13px; letter-spacing: 0.2em; color: var(--text-secondary); margin-bottom: 48px;">Code Generation & Agentic Loops</p>
+                    <div style="width: 80px; height: 1px; background-color: var(--border-color); margin: 0 auto 30px auto;"></div>
+                    <p style="font-style: italic; color: var(--text-secondary); font-size: 15px; max-width: 340px; margin: 0 auto;">"A detailed guide to model interaction, filesystem pipelines, sandboxing, and customizable subagent networks."</p>
+                </div>
+            </div>
+
+            <!-- Page 1: Chapter 1 -->
+            <div class="chapter-container" data-chapter="1">
+                <header class="chapter-header">
+                    <h3 class="chap-number">Chapter I</h3>
+                    <h1 class="chap-title">The Core Agentic Loop</h1>
+                </header>
+                <div class="chapter-body">
+                    <p>Antigravity is designed as a collaborative, agentic coding companion. Instead of operating as a single-prompt model, it bridges high-level reasoning with safe, local file and command execution pipelines. It is structured around an autonomous execution circle.</p>
+                    <p>When you present a prompt, the system routes the request through a specialized parser, appending context metrics. The central LLM (like Gemini) constructs a sequential plan and issues tool parameters. These calls are dynamically routed to the local execution sandbox, which contains file readers (view_file, list_dir), file writing editors (write_to_file, replace_file_content), browser monitors, and terminal command processes. The output is processed and returned, continuing the loop until completion.</p>
+                    
+                    <div class="mermaid-container" style="margin-top: 30px; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.02); overflow-x: auto;">
+                        <pre class="mermaid" style="text-align: center;">
+flowchart TD
+    User([User Prompt]) -->|Conversation Context| Model[Gemini Core LLM]
+    Model -->|1. Generate Plan & Steps| Loop{Agentic Loop}
+    Loop -->|2. Choose Tool Call| Router[Tool Execution Router]
+    
+    subgraph Sandbox [Execution Sandbox]
+        Router -->|Filesystem| FileTools[view_file / write_to_file / replace_file_content]
+        Router -->|Shell Commands| Terminal[run_command with User Approval]
+        Router -->|Browser / Web| WebTools[read_url_content / search_web]
+        Router -->|Sub-Tasks| SubAgent[define_subagent / invoke_subagent]
+    end
+    
+    FileTools -->|Results/Errors| Context[Updated System Context]
+    Terminal -->|Terminal Outputs| Context
+    WebTools -->|Scraped Content| Context
+    SubAgent -->|Reports & Logs| Context
+    
+    Context -->|Updated Conversation History| Model
+    Loop -->|3. Goal Achieved| End([User Response / Clickable Artifacts])
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 2: Chapter 2 -->
+            <div class="chapter-container" data-chapter="2">
+                <header class="chapter-header">
+                    <h3 class="chap-number">Chapter II</h3>
+                    <h1 class="chap-title">The Four-Step Generation Cycle</h1>
+                </header>
+                <div class="chapter-body">
+                    <p>Antigravity constructs directories and solves code bugs systematically using an interactive four-phase loop:</p>
+                    <ul>
+                        <li><strong>Context Assembly</strong>: Gathers conversational history, files currently active inside the developer's text editor, active cursor placement coordinates, and client platform characteristics.</li>
+                        <li><strong>Planning & Tool Selection</strong>: The model chooses necessary actions and triggers the relevant tool calls, defining detailed parameter payloads.</li>
+                        <li><strong>Execution & Feedback</strong>: The local sandbox executes the calls and returns stdout/stderr reports back into the active prompt window.</li>
+                        <li><strong>Self-Correction & Linting</strong>: If any command errors out or syntax issues are discovered during compilation, the model processes the logs and issues correct edits immediately.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Page 3: Chapter 3 -->
+            <div class="chapter-container" data-chapter="3">
+                <header class="chapter-header">
+                    <h3 class="chap-number">Chapter III</h3>
+                    <h1 class="chap-title">Sandboxing & Safe Command Gates</h1>
+                </header>
+                <div class="chapter-body">
+                    <p>To secure local filesystems against unintended actions, the execution environment operates under double security gates:</p>
+                    <p><strong>Scope Restrictions</strong>: Writing permissions are restricted to the designated active workspace directory. Accessing system file trees, application registries, or external networks requires immediate explicit permission grants.</p>
+                    <p><strong>User Gatekeeping</strong>: All shell command proposals (such as launching Flask, installing requirements, or initializing Git repositories) are queued inside the task manager. They are blocked from running until the developer clicks "Approve". No arbitrary shell command runs on your system without your authorization.</p>
+                </div>
+            </div>
+
+            <!-- Page 4: Chapter 4 -->
+            <div class="chapter-container" data-chapter="4">
+                <header class="chapter-header">
+                    <h3 class="chap-number">Chapter IV</h3>
+                    <h1 class="chap-title">Subagents & Collaborative Workspaces</h1>
+                </header>
+                <div class="chapter-body">
+                    <p>For large scale engineering tasks, Antigravity delegates complex workflows to specialized subagents:</p>
+                    <ul>
+                        <li><strong>Specialized Profiles</strong>: It can spawn a <code>research</code> subagent (read-only) to inspect code patterns or a <code>self</code> subagent (inherits parent configuration) to build helper tools.</li>
+                        <li><strong>Workspace Branching</strong>: When a subagent is invoked, it can work in an inherited directory, a shared worktree, or a branched isolated workspace (similar to git worktree).</li>
+                        <li><strong>High-Concurrency Messaging</strong>: Subagents notify the parent agent upon completion, resolving problems in parallel without cluttering your main thread.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Page 5: Chapter 5 -->
+            <div class="chapter-container" data-chapter="5">
+                <header class="chapter-header">
+                    <h3 class="chap-number">Chapter V</h3>
+                    <h1 class="chap-title">Customizations & Plugin System</h1>
+                </header>
+                <div class="chapter-body">
+                    <p>Antigravity adapts its behavior using a dual-scoped customization system:</p>
+                    <ul>
+                        <li><strong>Global Settings (<code>C:\Users\srira\.gemini\config</code>)</strong>: Houses universally applied rules, style parameters, and system behaviors.</li>
+                        <li><strong>Project Settings (<code>.agents/</code> / Workspace Root)</strong>: Manages workspace-specific rules, library constraints, and folder maps.</li>
+                        <li><strong>Skills (<code>SKILL.md</code>)</strong>: Custom task plans defined by the developer. If a task matches a skill's YAML frontmatter title, the instructions are dynamically loaded into the agent's memory.</li>
+                        <li><strong>Plugins</strong>: Specialized bundles of tool wrappers (such as <code>chrome-devtools-plugin</code> for browser testing and <code>google-antigravity-sdk</code> for SDK access) loaded dynamically based on app profiles.</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- Pagination Controls -->
+        <footer class="page-footer">
+            <button class="btn-page" id="btn-prev" onclick="changePage(-1)" disabled><i class="fa-solid fa-angle-left"></i> Previous</button>
+            <span id="page-num-indicator">Page 1 of 5</span>
+            <button class="btn-page" id="btn-next" onclick="changePage(1)">Next <i class="fa-solid fa-angle-right"></i></button>
+        </footer>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toast-message">Bookmark saved.</span>
+    </div>
+
+    <!-- JS Logic -->
+    <script>
+        let currentPage = 0;
+        const totalPages = 6;
+        const chapters = document.querySelectorAll('.chapter-container');
+        const tocItems = document.querySelectorAll('.toc-item');
+        
+        // DOM Elements
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const pageIndicator = document.getElementById('page-num-indicator');
+        const progressFill = document.getElementById('progress-fill');
+        const progressPct = document.getElementById('progress-pct');
+        const bookmarkRibbon = document.getElementById('bookmark-ribbon');
+
+        // Initial Load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedPage = localStorage.getItem('archi_book_page');
+            if (savedPage !== null) {
+                bookmarkRibbon.classList.add('saved');
+            }
+            updateUI();
+
+            // Initialize Mermaid
+            if (typeof mermaid !== 'undefined') {
+                mermaid.initialize({
+                    startOnLoad: true,
+                    theme: 'neutral',
+                    flowchart: { useMaxWidth: true, htmlLabels: true }
+                });
+            }
+        });
+
+        function changePage(direction) {
+            currentPage = Math.max(0, Math.min(totalPages - 1, currentPage + direction));
+            updateUI();
+        }
+
+        tocItems.forEach(item => {
+            item.addEventListener('click', () => {
+                currentPage = parseInt(item.dataset.page);
+                updateUI();
+            });
+        });
+
+        function updateUI() {
+            chapters.forEach((chap, idx) => {
+                if (idx === currentPage) {
+                    chap.classList.add('active');
+                } else {
+                    chap.classList.remove('active');
+                }
+            });
+
+            tocItems.forEach((item, idx) => {
+                if (idx === currentPage) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            btnPrev.disabled = (currentPage === 0);
+            btnNext.disabled = (currentPage === totalPages - 1);
+
+            const pct = Math.round((currentPage / (totalPages - 1)) * 100);
+            progressFill.style.width = `${pct}%`;
+            progressPct.textContent = `${pct}%`;
+
+            pageIndicator.textContent = `Page ${currentPage + 1} of ${totalPages}`;
+
+            const savedPage = localStorage.getItem('archi_book_page');
+            if (savedPage !== null && parseInt(savedPage) === currentPage) {
+                bookmarkRibbon.classList.add('saved');
+            } else {
+                bookmarkRibbon.classList.remove('saved');
+            }
+        }
+
+        function changeTheme(theme) {
+            document.body.className = '';
+            if (theme === 'cream') document.body.classList.add('theme-cream');
+            if (theme === 'sepia') document.body.classList.add('theme-sepia');
+            if (theme === 'dark') document.body.classList.add('theme-dark');
+            showToast(`Theme switched to ${theme}`);
+        }
+
+        let fontSizeMultiplier = 1;
+        function adjustFont(direction) {
+            fontSizeMultiplier = Math.max(0.8, Math.min(1.4, fontSizeMultiplier + (direction * 0.1)));
+            const bodies = document.querySelectorAll('.chapter-body');
+            bodies.forEach(body => {
+                body.style.fontSize = `${17 * fontSizeMultiplier}px`;
+            });
+            showToast(`Adjusted font size`);
+        }
+
+        function saveBookmark() {
+            localStorage.setItem('archi_book_page', currentPage);
+            bookmarkRibbon.classList.add('saved');
+            showToast(`Bookmark saved on Page ${currentPage + 1}`);
+        }
+
+        function loadBookmark() {
+            const savedPage = localStorage.getItem('archi_book_page');
+            if (savedPage !== null) {
+                currentPage = parseInt(savedPage);
+                updateUI();
+                showToast(`Loaded bookmark from Page ${currentPage + 1}`);
+            } else {
+                showToast(`No bookmark found. Click 'Bookmark' above to save.`);
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.querySelector('span').textContent = message;
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
