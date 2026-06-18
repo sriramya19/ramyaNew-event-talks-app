@@ -342,8 +342,9 @@
             flex-direction: column;
             height: 100%;
             animation: pageFade 0.4s ease forwards;
-            
-            /* Hidden by default but layout metrics preserved for Mermaid */
+        }
+
+        .chapter-container.inactive-chapter {
             position: absolute;
             opacity: 0;
             pointer-events: none;
@@ -351,20 +352,14 @@
             height: 0;
             overflow: hidden;
             width: 100%;
-        }
-
-        .chapter-container.active {
-            position: relative;
-            opacity: 1;
-            pointer-events: auto;
-            visibility: visible;
-            height: auto;
-            width: auto;
         }
 
         /* Book Section Layout */
         .book-section {
-            /* Hidden by default but layout metrics preserved for Mermaid */
+            width: 100%;
+        }
+
+        .book-section.inactive-book {
             position: absolute;
             opacity: 0;
             pointer-events: none;
@@ -372,15 +367,6 @@
             height: 0;
             overflow: hidden;
             width: 100%;
-        }
-
-        .book-section.active-book {
-            position: relative;
-            opacity: 1;
-            pointer-events: auto;
-            visibility: visible;
-            height: auto;
-            width: auto;
         }
 
         @keyframes pageFade {
@@ -1044,18 +1030,25 @@ graph TD
         const bookmarkRibbon = document.getElementById('bookmark-ribbon');
 
         // Initial Load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize default book
-            switchBook('architecture');
-
-            // Initialize Mermaid
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Keep all containers visible on load so Mermaid can render bounds
             if (typeof mermaid !== 'undefined') {
-                mermaid.initialize({
-                    startOnLoad: true,
-                    theme: 'neutral',
-                    flowchart: { useMaxWidth: true, htmlLabels: true }
-                });
+                try {
+                    mermaid.initialize({
+                        startOnLoad: false, // Do not run on load automatically
+                        theme: 'neutral',
+                        securityLevel: 'loose',
+                        flowchart: { useMaxWidth: true, htmlLabels: true }
+                    });
+                    // Run Mermaid manually
+                    await mermaid.run();
+                } catch (err) {
+                    console.error("Mermaid run error:", err);
+                }
             }
+
+            // Once Mermaid is fully done rendering, set up default book and hide other sections
+            switchBook('architecture');
         });
 
         function switchBook(bookKey) {
@@ -1071,9 +1064,9 @@ graph TD
             // Toggle HTML sections
             document.querySelectorAll('.book-section').forEach(sec => {
                 if (sec.id === `book-${bookKey}`) {
-                    sec.classList.add('active-book');
+                    sec.classList.remove('inactive-book');
                 } else {
-                    sec.classList.remove('active-book');
+                    sec.classList.add('inactive-book');
                 }
             });
             
@@ -1129,8 +1122,10 @@ graph TD
             chapters.forEach((chap, idx) => {
                 if (idx === currentPage) {
                     chap.classList.add('active');
+                    chap.classList.remove('inactive-chapter');
                 } else {
                     chap.classList.remove('active');
+                    chap.classList.add('inactive-chapter');
                 }
             });
 
