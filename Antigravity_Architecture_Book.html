@@ -533,7 +533,6 @@
                 <option value="architecture">Antigravity Architecture</option>
                 <option value="imp_plan">Release Pulse Plan</option>
                 <option value="upgrade_notes">Spring AI Upgrade Notes</option>
-                <option value="diagrams">Visual Flowcharts</option>
             </select>
         </div>
 
@@ -825,121 +824,6 @@ graph TD
                     </div>
             </div>
 
-            <!-- BOOK 4: VISUAL FLOWCHARTS -->
-            <div class="book-section" id="book-diagrams">
-                <!-- Page 0: Title Page -->
-                <div class="chapter-container" data-chapter="0">
-                    <div style="text-align: center; margin-top: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
-                        <div style="font-size: 36px; color: var(--primary); margin-bottom: 24px;"><i class="fa-solid fa-diagram-project"></i></div>
-                        <h1 style="font-family: var(--font-display); font-size: 30px; font-weight: 800; line-height: 1.4; margin-bottom: 16px;">Visual Flowcharts</h1>
-                        <p style="font-family: var(--font-display); font-size: 13px; letter-spacing: 0.2em; color: var(--text-secondary); margin-bottom: 48px;">Architecture & Project Pipelines</p>
-                        <div style="width: 80px; height: 1px; background-color: var(--border-color); margin: 0 auto 30px auto;"></div>
-                        <p style="font-style: italic; color: var(--text-secondary); font-size: 15px; max-width: 340px; margin: 0 auto;">"A comprehensive graphic guide detailing the agent loop, application pipelines, and folder structures."</p>
-                    </div>
-                </div>
-
-                <!-- Page 1: Chapter 1 -->
-                <div class="chapter-container" data-chapter="1">
-                    <header class="chapter-header">
-                        <h3 class="chap-number">Chapter I</h3>
-                        <h1 class="chap-title">The Antigravity Loop</h1>
-                    </header>
-                    <div class="chapter-body">
-                        <p>The diagram below illustrates how Antigravity manages local system resources dynamically. It coordinates Gemini core prompts with sandboxed filesystem, command executing processes, and sub-threads:</p>
-                        
-                        <div class="mermaid-container" style="margin-top: 20px; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.02); overflow-x: auto;">
-                            <pre class="mermaid" style="text-align: center;">
-flowchart TD
-    User([User Prompt]) -->|1. Request Context| Model[Gemini Core LLM]
-    Model -->|2. Planning Steps| Loop{Agentic Loop}
-    Loop -->|3. Route Tool Calls| Router[Tool Execution Router]
-    
-    subgraph Sandbox [Local Sandbox]
-        Router -->|View/Edit File| FileTools[File Management Tools]
-        Router -->|Terminal Action| Terminal[Command Process]
-        Router -->|Gather Web Specs| WebTools[Scrapers / Browsers]
-        Router -->|Spawn Sub-Tasks| SubAgent[Parallel Subagents]
-    end
-    
-    FileTools -->|Data Result| Context[Updated System Context]
-    Terminal -->|Stdout / Stderr| Context
-    WebTools -->|Scraped HTML| Context
-    SubAgent -->|Completion Reports| Context
-    
-    Context -->|4. Loop Back Context| Model
-    Loop -->|5. Complete Goal| End([User Output / Artifacts])
-                            </pre>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Page 2: Chapter 2 -->
-                <div class="chapter-container" data-chapter="2">
-                    <header class="chapter-header">
-                        <h3 class="chap-number">Chapter II</h3>
-                        <h1 class="chap-title">Release Pulse Data Flow</h1>
-                    </header>
-                    <div class="chapter-body">
-                        <p>This flowchart defines the Spring AI Release Pulse pipelines, tracing how raw upgrade notes are pulled from official Spring documents and delivered to client timelines and X/Twitter:</p>
-                        
-                        <div class="mermaid-container" style="margin-top: 20px; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.02); overflow-x: auto;">
-                            <pre class="mermaid" style="text-align: center;">
-graph LR
-    Spring[docs.spring.io] -->|1. HTTP Fetch| Flask[Flask app.py]
-    Flask -->|2. bs4 Scraper| Cache[(In-Memory Cache)]
-    Cache -->|3. API /api/releases| Frontend[HTML / CSS / JS UI]
-    Frontend -->|4. Toggle Pill Filters| Timeline[Timeline View]
-    Frontend -->|5. Check Cards| Drawer[Twitter Composer]
-    Drawer -->|6. Compile Text| Clipboard[Copy to Clipboard]
-    Drawer -->|7. Web Intent| Twitter[Publish Tweet on X]
-                            </pre>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Page 3: Chapter 3 -->
-                <div class="chapter-container" data-chapter="3">
-                    <header class="chapter-header">
-                        <h3 class="chap-number">Chapter III</h3>
-                        <h1 class="chap-title">Project Folder Map</h1>
-                    </header>
-                    <div class="chapter-body">
-                        <p>The tree graph below charts how folders are mapped inside the workspace, showing where scripts, notes, audio assets, and ignored items are stored:</p>
-                        
-                        <div class="mermaid-container" style="margin-top: 20px; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.02); overflow-x: auto;">
-                            <pre class="mermaid" style="text-align: center;">
-graph TD
-    Root[Workspace Root: airelease] --> Docs[Documents Folder]
-    Root --> Img[Images Folder]
-    Root --> Vid[Videos Folder]
-    Root --> Src[Backend & Scripts]
-    Root --> Static[Static Assets]
-    Root --> Templates[Templates]
-    
-    Docs --> News[news.txt]
-    Docs --> Sum[summary.txt]
-    
-    Vid --> Aud[architecture_audio.wav]
-    
-    Src --> App[app.py - Flask Server]
-    Src --> Gen[generate_audio.ps1 - Audio Synthesizer]
-    Src --> Run[run.ps1 - Launcher]
-    
-    Static --> Css[css/style.css]
-    Static --> Js[js/app.js]
-    
-    Templates --> Ind[index.html]
-    
-    style Root fill:#d4af37,stroke:#9d7b32,color:#fff
-    style Docs fill:#6b7280,stroke:#4b5563,color:#fff
-    style Vid fill:#6b7280,stroke:#4b5563,color:#fff
-    style Src fill:#10b981,stroke:#059669,color:#fff
-    style Static fill:#3b82f6,stroke:#2563eb,color:#fff
-                            </pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </article>
 
         <!-- Pagination Controls -->
@@ -1000,18 +884,6 @@ graph TD
                     { label: "Chapter II: Tool Calling", icon: "fa-wrench" },
                     { label: "Chapter III: Immutability", icon: "fa-lock" },
                     { label: "Chapter IV: Databases & Starters", icon: "fa-database" }
-                ]
-            },
-            diagrams: {
-                title: "Visual Flowcharts",
-                meta: "Architecture & Project",
-                audio: "",
-                totalPages: 4,
-                toc: [
-                    { label: "Title Page", icon: "fa-feather" },
-                    { label: "Chapter I: Agentic Loop", icon: "fa-arrows-spin" },
-                    { label: "Chapter II: Release Pulse", icon: "fa-network-wired" },
-                    { label: "Chapter III: Folder Map", icon: "fa-folder-tree" }
                 ]
             }
         };
