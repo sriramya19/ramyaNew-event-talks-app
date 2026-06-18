@@ -338,14 +338,49 @@
 
         /* Chapter Layout */
         .chapter-container {
-            display: none;
+            display: flex;
             flex-direction: column;
             height: 100%;
             animation: pageFade 0.4s ease forwards;
+            
+            /* Hidden by default but layout metrics preserved for Mermaid */
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
+            width: 100%;
         }
 
         .chapter-container.active {
-            display: flex;
+            position: relative;
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+            height: auto;
+            width: auto;
+        }
+
+        /* Book Section Layout */
+        .book-section {
+            /* Hidden by default but layout metrics preserved for Mermaid */
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .book-section.active-book {
+            position: relative;
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+            height: auto;
+            width: auto;
         }
 
         @keyframes pageFade {
@@ -671,7 +706,7 @@ flowchart TD
             </div>
 
             <!-- BOOK 2: IMPLEMENTATION PLAN -->
-            <div class="book-section" id="book-imp_plan" style="display: none;">
+            <div class="book-section" id="book-imp_plan">
                 <!-- Page 0: Title Page -->
                 <div class="chapter-container" data-chapter="0">
                     <div style="text-align: center; margin-top: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
@@ -744,7 +779,7 @@ graph TD
             </div>
 
             <!-- BOOK 3: SPRING AI UPGRADE NOTES -->
-            <div class="book-section" id="book-upgrade_notes" style="display: none;">
+            <div class="book-section" id="book-upgrade_notes">
                 <!-- Page 0: Title Page -->
                 <div class="chapter-container" data-chapter="0">
                     <div style="text-align: center; margin-top: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
@@ -805,7 +840,7 @@ graph TD
             </div>
 
             <!-- BOOK 4: VISUAL FLOWCHARTS -->
-            <div class="book-section" id="book-diagrams" style="display: none;">
+            <div class="book-section" id="book-diagrams">
                 <!-- Page 0: Title Page -->
                 <div class="chapter-container" data-chapter="0">
                     <div style="text-align: center; margin-top: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
@@ -1036,9 +1071,9 @@ graph TD
             // Toggle HTML sections
             document.querySelectorAll('.book-section').forEach(sec => {
                 if (sec.id === `book-${bookKey}`) {
-                    sec.style.display = 'block';
+                    sec.classList.add('active-book');
                 } else {
-                    sec.style.display = 'none';
+                    sec.classList.remove('active-book');
                 }
             });
             
