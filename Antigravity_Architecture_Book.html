@@ -882,169 +882,284 @@ graph TD
                         <h1 class="chap-title">app.py</h1>
                     </header>
                     <div class="chapter-body" style="text-align: left;">
-                        <pre class="line-numbers"><code class="language-python">import os
+                        <pre class="line-numbers"><code class="language-python"># Import the OS module to read environment variables (e.g., port configurations)
+import os
+# Import logging to output descriptive event status and error trace messages
 import logging
+# Import urllib.request to fetch the Spring AI upgrade documentation over HTTP
 import urllib.request
+# Import BeautifulSoup from bs4 for parsing HTML documents and querying tags
 from bs4 import BeautifulSoup
+# Import Flask framework classes to build the server, render template UI, and return JSON/query payloads
 from flask import Flask, render_template, jsonify, request
 
+# Initialize the central Flask application instance
 app = Flask(__name__)
 
-# Configure logging
+# Configure the system-wide logging level to INFO for runtime status tracking
 logging.basicConfig(level=logging.INFO)
+# Instantiate a named logger for outputting log messages specific to this module
 logger = logging.getLogger(__name__)
 
+# Define the constant target URL containing the official Spring AI upgrade notes documentation
 UPGRADE_NOTES_URL = &quot;https://docs.spring.io/spring-ai/reference/upgrade-notes.html&quot;
 
-# Simple in-memory cache
+# Initialize an in-memory dictionary cache to persist scraped results and limit network requests
 cache = {
+    # Stores the parsed array of release updates
     &#x27;updates&#x27;: None,
+    # Stores the timestamp string representing when the cache was last refreshed
     &#x27;last_updated&#x27;: None
 }
 
+# Define a helper function to categorize an update card based on its title or parent category text
 def determine_category(title, parent_category=&quot;&quot;):
+    # Combine title and parent category name, then convert to lowercase for case-insensitive matching
     t = (title + &quot; &quot; + parent_category).lower()
+    
+    # Check if key words related to advisor structures are in the title text
     if any(word in t for word in [&quot;advisor&quot;, &quot;vector-store-advisor&quot;]):
+        # Return the category designation string &#x27;Advisors&#x27;
         return &quot;Advisors&quot;
+    # Check if key words representing tool calls, MCP, callbacks, or functions are present
     if any(word in t for word in [&quot;tool&quot;, &quot;mcp&quot;, &quot;callback&quot;, &quot;functioncall&quot;]):
+        # Return the category designation string &#x27;Tool Calling &amp; MCP&#x27;
         return &quot;Tool Calling &amp; MCP&quot;
+    # Check if key words representing memory structures or histories are present
     if any(word in t for word in [&quot;memory&quot;, &quot;chatmemory&quot;, &quot;history&quot;]):
+        # Return the category designation string &#x27;Chat Memory&#x27;
         return &quot;Chat Memory&quot;
+    # Check if key words representing specific model architectures or provider names are present
     if any(word in t for word in [&quot;model&quot;, &quot;ollama&quot;, &quot;openai&quot;, &quot;minimax&quot;, &quot;genai&quot;, &quot;anthropic&quot;, &quot;vertex&quot;, &quot;bedrock&quot;]):
+        # Return the category designation string &#x27;Models &amp; Providers&#x27;
         return &quot;Models &amp; Providers&quot;
+    # Check if key words representing converters, schemas, or output structures are present
     if any(word in t for word in [&quot;converter&quot;, &quot;schema&quot;, &quot;output&quot;, &quot;structured&quot;]):
+        # Return the category designation string &#x27;Structured Output&#x27;
         return &quot;Structured Output&quot;
+    # Check if key words representing observability or tracing frameworks are present
     if any(word in t for word in [&quot;observability&quot;, &quot;metric&quot;, &quot;span&quot;, &quot;trace&quot;, &quot;instrument&quot;]):
+        # Return the category designation string &#x27;Observability&#x27;
         return &quot;Observability&quot;
+    # Check if key words representing vector databases, caches, or storage layers are present
     if any(word in t for word in [&quot;database&quot;, &quot;db&quot;, &quot;cosmos&quot;, &quot;cassandra&quot;, &quot;pgvector&quot;, &quot;store&quot;, &quot;vectordb&quot;]):
+        # Return the category designation string &#x27;Vector Databases&#x27;
         return &quot;Vector Databases&quot;
+    # Check if key words representing JSON format utilities or Jackson serializers are present
     if any(word in t for word in [&quot;json&quot;, &quot;jackson&quot;, &quot;helper&quot;]):
+        # Return the category designation string &#x27;JSON Utilities&#x27;
         return &quot;JSON Utilities&quot;
+    # Default return string for any cards that do not match the categories above
     return &quot;General&quot;
 
+# Define the HTML parsing engine to scrape and extract version updates from the page source
 def parse_release_notes(html_content):
+    # Initialize the BeautifulSoup compiler using the standard html.parser engine
     soup = BeautifulSoup(html_content, &#x27;html.parser&#x27;)
+    # Instantiate an empty array to collect the structured update dictionaries
     updates = []
     
+    # Locate the main container tag containing the documentation content
     doc = soup.find(&#x27;article&#x27;, class_=&#x27;doc&#x27;)
+    # If the standard article class isn&#x27;t found, fallback to searching the document body
     if not doc:
+        # Assign the document body tag as the search container
         doc = soup.body
+        # If the body tag is also absent, return an empty array of updates
         if not doc:
+            # Return empty list
             return []
             
+    # Retrieve all primary section containers (representing major version headers)
     sect1_divs = doc.find_all(&#x27;div&#x27;, class_=&#x27;sect1&#x27;)
+    # Iterate through each major version section division
     for sect1 in sect1_divs:
+        # Locate the h2 title element containing the version header text
         h2 = sect1.find(&#x27;h2&#x27;)
+        # If the version header element is missing, skip to the next section
         if not h2:
+            # Continue to next section
             continue
+        # Get the text content of the version header and strip any external whitespace
         version_text = h2.get_text().strip()
-        # Clean version text if it contains anchor characters
+        # Clean prefix markers out of version string to standardize presentation labels
         version_text = version_text.replace(&quot;Upgrading to &quot;, &quot;&quot;).strip()
         
+        # Retrieve all category subsection divisions inside this version container
         sect2_divs = sect1.find_all(&#x27;div&#x27;, class_=&#x27;sect2&#x27;)
+        # Iterate through each category subsection container
         for sect2 in sect2_divs:
+            # Locate the h3 header element representing the sub-category title
             h3 = sect2.find(&#x27;h3&#x27;)
+            # If the category header element is missing, skip to the next subsection
             if not h3:
+                # Continue to next subsection
                 continue
+            # Get the text content of the category header and strip any external whitespace
             category_text = h3.get_text().strip()
+            # Retrieve the id attribute representing the page anchor segment
             category_id = h3.get(&#x27;id&#x27;, &#x27;&#x27;)
             
-            # Find direct sub-updates (sect3)
+            # Retrieve all granular update sections (sect3 divs) nested inside the category
             sect3_divs = sect2.find_all(&#x27;div&#x27;, class_=&#x27;sect3&#x27;)
             
-            # Check if all h4 headings in sect3 are generic (Impact, Migration, etc.)
+            # Setup indicators to determine whether the subheadings represent unique feature topics
             has_descriptive_subheadings = False
+            # List generic heading keywords that represent standard layouts rather than feature names
             generic_words = [&quot;impact&quot;, &quot;migration&quot;, &quot;why&quot;, &quot;detail&quot;]
             
+            # Iterate through all granular sub-update containers to inspect headers
             for sect3 in sect3_divs:
+                # Locate the h4 heading element of this sub-update block
                 h4 = sect3.find(&#x27;h4&#x27;)
+                # If an h4 heading exists in the block
                 if h4:
+                    # Retrieve and clean the text content of the subheading in lowercase
                     h4_text = h4.get_text().lower().strip()
+                    # If the subheading is not a generic metadata section, mark it as descriptive
                     if not any(gen in h4_text for gen in generic_words):
+                        # Set description flag to true
                         has_descriptive_subheadings = True
+                        # Break out of loop since we found a descriptive subheading
                         break
             
+            # If descriptive subheadings exist, treat each sect3 container as an individual update card
             if sect3_divs and has_descriptive_subheadings:
-                # Treat each sect3 as an individual update
+                # Iterate through all nested subheadings
                 for sect3 in sect3_divs:
+                    # Locate the h4 header tag of this specific block
                     h4 = sect3.find(&#x27;h4&#x27;)
+                    # If the header tag is missing, skip to the next subhead block
                     if not h4:
+                        # Continue to next block
                         continue
+                    # Retrieve the title text representing this update card
                     update_title = h4.get_text().strip()
+                    # Get the anchor ID of the subheading to construct the deep link
                     update_id = h4.get(&#x27;id&#x27;, &#x27;&#x27;)
                     
-                    # Content is everything inside sect3 except h4
+                    # Accumulate all sibling tag strings to form the body text HTML markup
                     content_html = &quot;&quot;
+                    # Iterate through the direct children nodes of the sub-update section
                     for child in sect3.children:
+                        # Skip the title header node itself to avoid replicating the header text
                         if child == h4 or getattr(child, &#x27;name&#x27;, None) == &#x27;h4&#x27;:
+                            # Skip
                             continue
+                        # Append the child element&#x27;s string representation to the body content string
                         content_html += str(child)
                         
-                    # Prepend parent category to categories list
+                    # Calculate the category tag based on title keywords and parent section labels
                     cat = determine_category(update_title, category_text)
                     
+                    # Construct and append a structured dictionary to the output collection
                     updates.append({
+                        # Unique identifier for the card
                         &#x27;id&#x27;: update_id or f&quot;up-{len(updates)}&quot;,
+                        # Associated release version string
                         &#x27;version&#x27;: version_text,
+                        # High-level category string for UI filtering
                         &#x27;category&#x27;: cat,
+                        # Sub-category section title string
                         &#x27;sub_category&#x27;: category_text,
+                        # Heading title string of the update
                         &#x27;title&#x27;: update_title,
+                        # HTML string content of the update details
                         &#x27;html_content&#x27;: content_html.strip(),
+                        # Direct URL documentation link targeting this specific change
                         &#x27;link&#x27;: f&quot;{UPGRADE_NOTES_URL}#{update_id}&quot; if update_id else UPGRADE_NOTES_URL
                     })
+            # Else, treat the entire category division (sect2) as a single consolidated update card
             else:
-                # Treat the entire sect2 as a single update
+                # Accumulate tag strings inside the subsection to form the body text HTML markup
                 content_html = &quot;&quot;
+                # Iterate through all direct children nodes of the category section
                 for child in sect2.children:
+                    # Skip the main section header tag to avoid replicating the title text
                     if child == h3 or getattr(child, &#x27;name&#x27;, None) == &#x27;h3&#x27;:
+                        # Skip
                         continue
+                    # Append the node&#x27;s string representation to the body content string
                     content_html += str(child)
                     
+                # Calculate the category tag based on category section text
                 cat = determine_category(category_text)
+                # Construct and append the consolidated card dictionary to the output collection
                 updates.append({
+                    # Unique identifier matching the category anchor link
                     &#x27;id&#x27;: category_id or f&quot;up-{len(updates)}&quot;,
+                    # Associated release version string
                     &#x27;version&#x27;: version_text,
+                    # High-level category string for UI filtering
                     &#x27;category&#x27;: cat,
+                    # Fallback general designator for sub-categories
                     &#x27;sub_category&#x27;: &#x27;General&#x27;,
+                    # Title heading of the section
                     &#x27;title&#x27;: category_text,
+                    # HTML string content containing all details
                     &#x27;html_content&#x27;: content_html.strip(),
+                    # URL link pointing to the documentation subsection
                     &#x27;link&#x27;: f&quot;{UPGRADE_NOTES_URL}#{category_id}&quot; if category_id else UPGRADE_NOTES_URL
                 })
                 
+    # Return the fully compiled list of update dictionaries
     return updates
 
+# Define high-level fetch routine to handle document download, cache storage, and error flags
 def fetch_and_parse():
+    # Wrap network transactions and HTML processing within a safety check block
     try:
+        # Output log status specifying the initiation of the documentation scrape
         logger.info(f&quot;Fetching Spring AI Release notes from {UPGRADE_NOTES_URL}&quot;)
+        # Build an HTTP Request container adding a User-Agent header to prevent crawl blockades
         req = urllib.request.Request(
             UPGRADE_NOTES_URL, 
             headers={&#x27;User-Agent&#x27;: &#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#x27;}
         )
+        # Open the network socket and retrieve the response content
         with urllib.request.urlopen(req, timeout=20) as response:
+            # Decode the response body binary stream into a UTF-8 character string
             html_data = response.read().decode(&#x27;utf-8&#x27;)
         
+        # Log successful download and announce parser initiation
         logger.info(&quot;Successfully fetched HTML. Parsing release notes...&quot;)
+        # Invoke the BeautifulSoup scraper pipeline to extract cards array
         updates = parse_release_notes(html_data)
+        # Log the count of successfully extracted update card entries
         logger.info(f&quot;Successfully parsed {len(updates)} updates.&quot;)
         
+        # Update cache updates field with new results list
         cache[&#x27;updates&#x27;] = updates
+        # Import standard datetime module to build timestamp strings
         import datetime
+        # Store current date-time string as the last refresh timestamp
         cache[&#x27;last_updated&#x27;] = datetime.datetime.now().strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)
+        # Return the parsed data and None to signify no errors occurred
         return updates, None
+    # Intercept any network connection failures or HTML parsing errors
     except Exception as e:
+        # Log error description and complete traceback information
         logger.error(f&quot;Error fetching/parsing release notes: {str(e)}&quot;)
+        # Return an empty list and the string error message to caller
         return [], str(e)
 
+# Register default server route pointing to main page renderer
 @app.route(&#x27;/&#x27;)
 def index():
+    # Render and return index.html dashboard template file to user agent
     return render_template(&#x27;index.html&#x27;)
 
+# Register API endpoint route designed to yield structured JSON updates feeds
 @app.route(&#x27;/api/releases&#x27;)
 def get_releases():
+    # Read query parameter to determine if client requested an immediate live update reload
     force_refresh = request.args.get(&#x27;force&#x27;, &#x27;false&#x27;).lower() == &#x27;true&#x27;
     
+    # If cache is active and no forced refresh was requested, yield the cache immediately
     if cache[&#x27;updates&#x27;] is not None and not force_refresh:
+        # Log cache hit return status
         logger.info(&quot;Returning cached updates&quot;)
+        # Compile cache fields into a successful JSON payload response
         return jsonify({
             &#x27;status&#x27;: &#x27;success&#x27;,
             &#x27;releases&#x27;: cache[&#x27;updates&#x27;],
@@ -1052,22 +1167,27 @@ def get_releases():
             &#x27;cached&#x27;: True
         })
         
+    # Trigger parser routing to perform network download and scraping
     updates, error = fetch_and_parse()
+    # If an error occurs during parsing or connection
     if error:
-        # If fetch fails but we have cached updates, return them with warning
+        # If scraper fails but a cached copy exists from a prior request, return it with warning info
         if cache[&#x27;updates&#x27;] is not None:
+            # Yield cached updates in response along with server error details
             return jsonify({
                 &#x27;status&#x27;: &#x27;warning&#x27;,
                 &#x27;releases&#x27;: cache[&#x27;updates&#x27;],
                 &#x27;last_updated&#x27;: cache[&#x27;last_updated&#x27;],
                 &#x27;message&#x27;: f&quot;Failed to refresh: {error}. Showing last cached version.&quot;
             })
+        # If cache is empty and scraper fails, return structured HTTP 500 error code
         return jsonify({
             &#x27;status&#x27;: &#x27;error&#x27;,
             &#x27;message&#x27;: error,
             &#x27;releases&#x27;: []
         }), 500
         
+    # Standard return returning newly fetched and processed update results array
     return jsonify({
         &#x27;status&#x27;: &#x27;success&#x27;,
         &#x27;releases&#x27;: updates,
@@ -1075,8 +1195,11 @@ def get_releases():
         &#x27;cached&#x27;: False
     })
 
+# Verify if the module script is executed directly from process launcher
 if __name__ == &#x27;__main__&#x27;:
+    # Read system port environment variable fallback to standard web port 5000
     port = int(os.environ.get(&#x27;PORT&#x27;, 5000))
+    # Run the local Flask dev server on open host binding, port, with live reloading enabled
     app.run(host=&#x27;0.0.0.0&#x27;, port=port, debug=True)
 </code></pre>
                     </div>
