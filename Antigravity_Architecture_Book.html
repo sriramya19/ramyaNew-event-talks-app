@@ -10,7 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Mermaid.js for diagrams -->
+    <!-- Mermaid.js for diagrams -->\n    <!-- Prism.js for code highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-powershell.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <style>
         /* Mermaid styling and Dark Mode adjustments */
@@ -24,7 +28,20 @@
         .theme-sepia .mermaid svg {
             filter: sepia(0.3) contrast(1.1);
         }
-        :root {
+                /* Prism styles */
+        pre[class*="language-"] {
+            margin: 0;
+            padding: 16px;
+            border-radius: 6px;
+            font-size: 13px !important;
+            line-height: 1.5 !important;
+            max-height: 480px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+        code[class*="language-"] {
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace !important;
+        }\n        :root {
             /* Typography */
             --font-serif: 'Lora', Georgia, serif;
             --font-display: 'Cinzel', serif;
@@ -532,7 +549,7 @@
             <select id="book-select" onchange="switchBook(this.value)" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); background-color: var(--bg-book); color: var(--text-main); font-family: var(--font-sans); font-size: 12px; font-weight: 600; outline: none; cursor: pointer; transition: var(--transition);">
                 <option value="architecture">Antigravity Architecture</option>
                 <option value="imp_plan">Release Pulse Plan</option>
-                <option value="upgrade_notes">Spring AI Upgrade Notes</option>
+                <option value="upgrade_notes">Spring AI Upgrade Notes</option>\n                <option value="source_code">Project Source Code</option>
             </select>
         </div>
 
@@ -841,7 +858,2398 @@ graph TD
                     </div>
             </div>
 
-        </article>
+            <!-- BOOK 5: PROJECT SOURCE CODE -->
+            <div class="book-section" id="book-source_code">
+                <!-- Page 0: Title Page -->
+                <div class="chapter-container" data-chapter="0">
+                    <div style="text-align: center; margin-top: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                        <div style="font-size: 36px; color: var(--primary); margin-bottom: 24px;"><i class="fa-solid fa-code"></i></div>
+                        <h1 style="font-family: var(--font-display); font-size: 30px; font-weight: 800; line-height: 1.4; margin-bottom: 16px;">Project Source Code</h1>
+                        <p style="font-family: var(--font-display); font-size: 13px; letter-spacing: 0.2em; color: var(--text-secondary); margin-bottom: 48px;">Spring AI Release Pulse Files</p>
+                        <div style="width: 80px; height: 1px; background-color: var(--border-color); margin: 0 auto 30px auto;"></div>
+                        <p style="font-style: italic; color: var(--text-secondary); font-size: 15px; max-width: 340px; margin: 0 auto;">"Complete source code repository for backend Flask engines, UI styling sheets, and synthesizers."</p>
+                    </div>
+                </div>
+
+                <!-- Page 1: app.py -->
+                <div class="chapter-container" data-chapter="1">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Backend Engine</h3>
+                        <h1 class="chap-title">app.py</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-python">import os
+import logging
+import urllib.request
+from bs4 import BeautifulSoup
+from flask import Flask, render_template, jsonify, request
+
+app = Flask(__name__)
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+UPGRADE_NOTES_URL = &quot;https://docs.spring.io/spring-ai/reference/upgrade-notes.html&quot;
+
+# Simple in-memory cache
+cache = {
+    &#x27;updates&#x27;: None,
+    &#x27;last_updated&#x27;: None
+}
+
+def determine_category(title, parent_category=&quot;&quot;):
+    t = (title + &quot; &quot; + parent_category).lower()
+    if any(word in t for word in [&quot;advisor&quot;, &quot;vector-store-advisor&quot;]):
+        return &quot;Advisors&quot;
+    if any(word in t for word in [&quot;tool&quot;, &quot;mcp&quot;, &quot;callback&quot;, &quot;functioncall&quot;]):
+        return &quot;Tool Calling &amp; MCP&quot;
+    if any(word in t for word in [&quot;memory&quot;, &quot;chatmemory&quot;, &quot;history&quot;]):
+        return &quot;Chat Memory&quot;
+    if any(word in t for word in [&quot;model&quot;, &quot;ollama&quot;, &quot;openai&quot;, &quot;minimax&quot;, &quot;genai&quot;, &quot;anthropic&quot;, &quot;vertex&quot;, &quot;bedrock&quot;]):
+        return &quot;Models &amp; Providers&quot;
+    if any(word in t for word in [&quot;converter&quot;, &quot;schema&quot;, &quot;output&quot;, &quot;structured&quot;]):
+        return &quot;Structured Output&quot;
+    if any(word in t for word in [&quot;observability&quot;, &quot;metric&quot;, &quot;span&quot;, &quot;trace&quot;, &quot;instrument&quot;]):
+        return &quot;Observability&quot;
+    if any(word in t for word in [&quot;database&quot;, &quot;db&quot;, &quot;cosmos&quot;, &quot;cassandra&quot;, &quot;pgvector&quot;, &quot;store&quot;, &quot;vectordb&quot;]):
+        return &quot;Vector Databases&quot;
+    if any(word in t for word in [&quot;json&quot;, &quot;jackson&quot;, &quot;helper&quot;]):
+        return &quot;JSON Utilities&quot;
+    return &quot;General&quot;
+
+def parse_release_notes(html_content):
+    soup = BeautifulSoup(html_content, &#x27;html.parser&#x27;)
+    updates = []
+    
+    doc = soup.find(&#x27;article&#x27;, class_=&#x27;doc&#x27;)
+    if not doc:
+        doc = soup.body
+        if not doc:
+            return []
+            
+    sect1_divs = doc.find_all(&#x27;div&#x27;, class_=&#x27;sect1&#x27;)
+    for sect1 in sect1_divs:
+        h2 = sect1.find(&#x27;h2&#x27;)
+        if not h2:
+            continue
+        version_text = h2.get_text().strip()
+        # Clean version text if it contains anchor characters
+        version_text = version_text.replace(&quot;Upgrading to &quot;, &quot;&quot;).strip()
+        
+        sect2_divs = sect1.find_all(&#x27;div&#x27;, class_=&#x27;sect2&#x27;)
+        for sect2 in sect2_divs:
+            h3 = sect2.find(&#x27;h3&#x27;)
+            if not h3:
+                continue
+            category_text = h3.get_text().strip()
+            category_id = h3.get(&#x27;id&#x27;, &#x27;&#x27;)
+            
+            # Find direct sub-updates (sect3)
+            sect3_divs = sect2.find_all(&#x27;div&#x27;, class_=&#x27;sect3&#x27;)
+            
+            # Check if all h4 headings in sect3 are generic (Impact, Migration, etc.)
+            has_descriptive_subheadings = False
+            generic_words = [&quot;impact&quot;, &quot;migration&quot;, &quot;why&quot;, &quot;detail&quot;]
+            
+            for sect3 in sect3_divs:
+                h4 = sect3.find(&#x27;h4&#x27;)
+                if h4:
+                    h4_text = h4.get_text().lower().strip()
+                    if not any(gen in h4_text for gen in generic_words):
+                        has_descriptive_subheadings = True
+                        break
+            
+            if sect3_divs and has_descriptive_subheadings:
+                # Treat each sect3 as an individual update
+                for sect3 in sect3_divs:
+                    h4 = sect3.find(&#x27;h4&#x27;)
+                    if not h4:
+                        continue
+                    update_title = h4.get_text().strip()
+                    update_id = h4.get(&#x27;id&#x27;, &#x27;&#x27;)
+                    
+                    # Content is everything inside sect3 except h4
+                    content_html = &quot;&quot;
+                    for child in sect3.children:
+                        if child == h4 or getattr(child, &#x27;name&#x27;, None) == &#x27;h4&#x27;:
+                            continue
+                        content_html += str(child)
+                        
+                    # Prepend parent category to categories list
+                    cat = determine_category(update_title, category_text)
+                    
+                    updates.append({
+                        &#x27;id&#x27;: update_id or f&quot;up-{len(updates)}&quot;,
+                        &#x27;version&#x27;: version_text,
+                        &#x27;category&#x27;: cat,
+                        &#x27;sub_category&#x27;: category_text,
+                        &#x27;title&#x27;: update_title,
+                        &#x27;html_content&#x27;: content_html.strip(),
+                        &#x27;link&#x27;: f&quot;{UPGRADE_NOTES_URL}#{update_id}&quot; if update_id else UPGRADE_NOTES_URL
+                    })
+            else:
+                # Treat the entire sect2 as a single update
+                content_html = &quot;&quot;
+                for child in sect2.children:
+                    if child == h3 or getattr(child, &#x27;name&#x27;, None) == &#x27;h3&#x27;:
+                        continue
+                    content_html += str(child)
+                    
+                cat = determine_category(category_text)
+                updates.append({
+                    &#x27;id&#x27;: category_id or f&quot;up-{len(updates)}&quot;,
+                    &#x27;version&#x27;: version_text,
+                    &#x27;category&#x27;: cat,
+                    &#x27;sub_category&#x27;: &#x27;General&#x27;,
+                    &#x27;title&#x27;: category_text,
+                    &#x27;html_content&#x27;: content_html.strip(),
+                    &#x27;link&#x27;: f&quot;{UPGRADE_NOTES_URL}#{category_id}&quot; if category_id else UPGRADE_NOTES_URL
+                })
+                
+    return updates
+
+def fetch_and_parse():
+    try:
+        logger.info(f&quot;Fetching Spring AI Release notes from {UPGRADE_NOTES_URL}&quot;)
+        req = urllib.request.Request(
+            UPGRADE_NOTES_URL, 
+            headers={&#x27;User-Agent&#x27;: &#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36&#x27;}
+        )
+        with urllib.request.urlopen(req, timeout=20) as response:
+            html_data = response.read().decode(&#x27;utf-8&#x27;)
+        
+        logger.info(&quot;Successfully fetched HTML. Parsing release notes...&quot;)
+        updates = parse_release_notes(html_data)
+        logger.info(f&quot;Successfully parsed {len(updates)} updates.&quot;)
+        
+        cache[&#x27;updates&#x27;] = updates
+        import datetime
+        cache[&#x27;last_updated&#x27;] = datetime.datetime.now().strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)
+        return updates, None
+    except Exception as e:
+        logger.error(f&quot;Error fetching/parsing release notes: {str(e)}&quot;)
+        return [], str(e)
+
+@app.route(&#x27;/&#x27;)
+def index():
+    return render_template(&#x27;index.html&#x27;)
+
+@app.route(&#x27;/api/releases&#x27;)
+def get_releases():
+    force_refresh = request.args.get(&#x27;force&#x27;, &#x27;false&#x27;).lower() == &#x27;true&#x27;
+    
+    if cache[&#x27;updates&#x27;] is not None and not force_refresh:
+        logger.info(&quot;Returning cached updates&quot;)
+        return jsonify({
+            &#x27;status&#x27;: &#x27;success&#x27;,
+            &#x27;releases&#x27;: cache[&#x27;updates&#x27;],
+            &#x27;last_updated&#x27;: cache[&#x27;last_updated&#x27;],
+            &#x27;cached&#x27;: True
+        })
+        
+    updates, error = fetch_and_parse()
+    if error:
+        # If fetch fails but we have cached updates, return them with warning
+        if cache[&#x27;updates&#x27;] is not None:
+            return jsonify({
+                &#x27;status&#x27;: &#x27;warning&#x27;,
+                &#x27;releases&#x27;: cache[&#x27;updates&#x27;],
+                &#x27;last_updated&#x27;: cache[&#x27;last_updated&#x27;],
+                &#x27;message&#x27;: f&quot;Failed to refresh: {error}. Showing last cached version.&quot;
+            })
+        return jsonify({
+            &#x27;status&#x27;: &#x27;error&#x27;,
+            &#x27;message&#x27;: error,
+            &#x27;releases&#x27;: []
+        }), 500
+        
+    return jsonify({
+        &#x27;status&#x27;: &#x27;success&#x27;,
+        &#x27;releases&#x27;: updates,
+        &#x27;last_updated&#x27;: cache[&#x27;last_updated&#x27;],
+        &#x27;cached&#x27;: False
+    })
+
+if __name__ == &#x27;__main__&#x27;:
+    port = int(os.environ.get(&#x27;PORT&#x27;, 5000))
+    app.run(host=&#x27;0.0.0.0&#x27;, port=port, debug=True)
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- Page 2: generate_audio.ps1 -->
+                <div class="chapter-container" data-chapter="2">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Audio Synthesizer</h3>
+                        <h1 class="chap-title">generate_audio.ps1</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-powershell"># PowerShell Script to generate Speech Synthesis audio for the architecture guide
+Add-Type -AssemblyName System.Speech
+$speak = New-Object System.Speech.Synthesis.SpeechSynthesizer
+
+# Ensure Videos directory exists
+$dir = &quot;C:\Users\srira\airelease\Videos&quot;
+if (!(Test-Path $dir)) {
+    New-Item -ItemType Directory -Force -Path $dir
+}
+
+$audioPath = &quot;C:\Users\srira\airelease\Videos\architecture_audio.wav&quot;
+$speak.SetOutputToWaveFile($audioPath)
+
+$text = @&quot;
+Antigravity Architecture and Code Generation Mechanics.
+Antigravity is an agentic A.I. coding assistant designed to operate autonomously in partnership with developers. It bridges the gap between high-level reasoning models and local file and command execution.
+
+Chapter 1. Core Architecture.
+The architecture consists of a continuous agentic loop. When a user prompt is received, the Gemini Core LLM generates a plan and chooses tool calls. These are routed to the execution sandbox, which contains file tools like view file and write to file, shell commands via run command with user approval, web tools like read url content and search web, and sub-tasks via subagents. The execution output is fed back as updated context, looping until the goal is achieved.
+
+Chapter 2. Interactive Code Generation Loop.
+Antigravity does not write code in a single generation step. Instead, it works through a four-step agentic loop.
+First, Context Assembly: Compiles the conversation history, open editor files, cursor position, and operating system specs.
+Second, Planning and Tool Selection: The Gemini model determines what actions are required and calls appropriate tools.
+Third, Execution and Feedback: The local sandbox runs the tools and returns results or errors.
+Fourth, Self-Correction and Debugging: If a command fails or a code lint error is detected, the model inspects the error and applies corrections.
+
+Chapter 3. Sandboxing and Safe Command Execution.
+To keep your system secure, Antigravity operates within a sandboxed file boundary:
+First, Scope Restriction: Write permissions are restricted to the active workspace folder. Direct access to system directories requires explicit permission requests.
+Second, User Gatekeeping: All shell command proposals are queued in a pending state until you approve or reject them. No commands run without your authorization.
+
+Chapter 4. Subagents and Collaborative Workspaces.
+For large scale engineering tasks, Antigravity uses subagents:
+First, Specialized Profiles: It can spawn a research subagent to inspect code, or a self subagent to build helper tools.
+Second, Workspace Branching: Subagents work in inherited, shared, or branched isolated workspaces.
+Third, High-Concurrency Messaging: Subagents notify the parent agent upon completion, resolving problems in parallel.
+
+Chapter 5. Customizations and Plugin System.
+Antigravity adapts its behavior using a dual-scoped customization system:
+First, Global Settings: Houses universally applied rules and system behaviors.
+Second, Project Settings: Manages workspace-specific rules and folder maps.
+Third, Skills: Custom task plans loaded dynamically based on matching triggers.
+Fourth, Plugins: Specialized bundles of tool wrappers like chrome devtools plugin and google antigravity SDK.
+&quot;@
+
+$speak.Speak($text)
+$speak.Dispose()
+Write-Host &quot;Audio generated successfully at $audioPath&quot;
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- Page 3: run.ps1 -->
+                <div class="chapter-container" data-chapter="3">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Launcher Script</h3>
+                        <h1 class="chap-title">run.ps1</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-powershell"># Spring AI Release Pulse - Run Script
+# Set script directory as active location
+$scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
+Set-Location $scriptPath
+
+Write-Host &quot;=============================================&quot; -ForegroundColor Green
+Write-Host &quot;   SPRING AI RELEASE PULSE - INITIALIZER     &quot; -ForegroundColor Green
+Write-Host &quot;=============================================&quot; -ForegroundColor Green
+Write-Host &quot;&quot;
+
+# 1. Check Python
+if (!(Get-Command python -ErrorAction SilentlyContinue)) {
+    Write-Host &quot;[ERROR] Python was not found in your PATH. Please install Python 3.8+.&quot; -ForegroundColor Red
+    Read-Host &quot;Press Enter to exit&quot;
+    exit
+}
+
+# 2. Setup Virtual Environment
+if (!(Test-Path &quot;venv&quot;)) {
+    Write-Host &quot;[INFO] Creating virtual environment (venv)...&quot; -ForegroundColor Cyan
+    python -m venv venv
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host &quot;[ERROR] Failed to create venv.&quot; -ForegroundColor Red
+        Read-Host &quot;Press Enter to exit&quot;
+        exit
+    }
+}
+
+# 3. Activate and Install Dependencies
+Write-Host &quot;[INFO] Activating virtual environment &amp; installing requirements...&quot; -ForegroundColor Cyan
+&amp; &quot;venv/Scripts/pip.exe&quot; install -r requirements.txt
+if ($LASTEXITCODE -ne 0) {
+    Write-Host &quot;[ERROR] Failed to install dependencies.&quot; -ForegroundColor Red
+    Read-Host &quot;Press Enter to exit&quot;
+    exit
+}
+
+# 4. Open Browser
+Write-Host &quot;[INFO] Starting Flask Server at http://127.0.0.1:5000/&quot; -ForegroundColor Cyan
+Start-Process &quot;http://127.0.0.1:5000/&quot;
+
+# 5. Run Flask App
+Write-Host &quot;[SUCCESS] Running app! Press Ctrl+C in this terminal to stop.&quot; -ForegroundColor Green
+&amp; &quot;venv/Scripts/python.exe&quot; app.py
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- Page 4: templates/index.html -->
+                <div class="chapter-container" data-chapter="4">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Dashboard Template</h3>
+                        <h1 class="chap-title">index.html</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta name=&quot;description&quot; content=&quot;Spring AI Release Pulse - Keep track of Spring AI updates, upgrades, and changes. Select updates and tweet them to X.&quot;&gt;
+    &lt;title&gt;Spring AI Release Pulse&lt;/title&gt;
+    &lt;!-- Google Fonts --&gt;
+    &lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;&gt;
+    &lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.gstatic.com&quot; crossorigin&gt;
+    &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;!-- FontAwesome for icons --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot;&gt;
+    &lt;!-- Custom CSS --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;{{ url_for(&#x27;static&#x27;, filename=&#x27;css/style.css&#x27;) }}&quot;&gt;
+&lt;/head&gt;
+&lt;body class=&quot;dark-theme&quot;&gt;
+    &lt;!-- Background glassmorphic gradients --&gt;
+    &lt;div class=&quot;background-radial bg-1&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;background-radial bg-2&quot;&gt;&lt;/div&gt;
+
+    &lt;div class=&quot;app-wrapper&quot;&gt;
+        &lt;!-- Header --&gt;
+        &lt;header class=&quot;app-header&quot;&gt;
+            &lt;div class=&quot;header-inner&quot;&gt;
+                &lt;div class=&quot;logo-section&quot;&gt;
+                    &lt;div class=&quot;logo-container&quot;&gt;
+                        &lt;i class=&quot;fa-solid fa-seedling&quot;&gt;&lt;/i&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;title-details&quot;&gt;
+                        &lt;h1&gt;Spring AI Release Pulse&lt;/h1&gt;
+                        &lt;p class=&quot;subtitle&quot;&gt;Real-time Upgrade Notes Monitor &amp; Twitter Composer&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;header-actions&quot;&gt;
+                    &lt;button id=&quot;theme-toggle&quot; class=&quot;btn-icon&quot; title=&quot;Toggle Light/Dark Theme&quot; aria-label=&quot;Toggle theme&quot;&gt;
+                        &lt;i class=&quot;fa-solid fa-moon&quot;&gt;&lt;/i&gt;
+                    &lt;/button&gt;
+                    &lt;button id=&quot;export-csv-btn&quot; class=&quot;btn btn-secondary&quot;&gt;
+                        &lt;i class=&quot;fa-solid fa-file-csv&quot;&gt;&lt;/i&gt;
+                        &lt;span&gt;Export CSV&lt;/span&gt;
+                    &lt;/button&gt;
+                    &lt;button id=&quot;refresh-btn&quot; class=&quot;btn btn-primary&quot;&gt;
+                        &lt;i id=&quot;refresh-icon&quot; class=&quot;fa-solid fa-arrows-rotate&quot;&gt;&lt;/i&gt;
+                        &lt;span&gt;Sync Notes&lt;/span&gt;
+                    &lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/header&gt;
+
+        &lt;!-- Stats Section --&gt;
+        &lt;section class=&quot;stats-overview&quot; aria-label=&quot;Quick metrics&quot;&gt;
+            &lt;div class=&quot;stat-card accent-green&quot;&gt;
+                &lt;div class=&quot;stat-icon&quot;&gt;&lt;i class=&quot;fa-solid fa-code-branch&quot;&gt;&lt;/i&gt;&lt;/div&gt;
+                &lt;div class=&quot;stat-content&quot;&gt;
+                    &lt;span class=&quot;stat-label&quot;&gt;Latest Version&lt;/span&gt;
+                    &lt;span class=&quot;stat-value&quot; id=&quot;val-latest-version&quot;&gt;Loading...&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;stat-card accent-blue&quot;&gt;
+                &lt;div class=&quot;stat-icon&quot;&gt;&lt;i class=&quot;fa-solid fa-bullseye&quot;&gt;&lt;/i&gt;&lt;/div&gt;
+                &lt;div class=&quot;stat-content&quot;&gt;
+                    &lt;span class=&quot;stat-label&quot;&gt;Total Updates&lt;/span&gt;
+                    &lt;span class=&quot;stat-value&quot; id=&quot;val-total-updates&quot;&gt;0&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;stat-card accent-purple&quot;&gt;
+                &lt;div class=&quot;stat-icon&quot;&gt;&lt;i class=&quot;fa-solid fa-wand-magic-sparkles&quot;&gt;&lt;/i&gt;&lt;/div&gt;
+                &lt;div class=&quot;stat-content&quot;&gt;
+                    &lt;span class=&quot;stat-label&quot;&gt;Advisors &amp; Tooling&lt;/span&gt;
+                    &lt;span class=&quot;stat-value&quot; id=&quot;val-tooling-updates&quot;&gt;0&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;stat-card accent-orange&quot;&gt;
+                &lt;div class=&quot;stat-icon&quot;&gt;&lt;i class=&quot;fa-solid fa-database&quot;&gt;&lt;/i&gt;&lt;/div&gt;
+                &lt;div class=&quot;stat-content&quot;&gt;
+                    &lt;span class=&quot;stat-label&quot;&gt;Vector Databases&lt;/span&gt;
+                    &lt;span class=&quot;stat-value&quot; id=&quot;val-db-updates&quot;&gt;0&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;!-- Control Bar --&gt;
+        &lt;section class=&quot;controls-bar&quot; aria-label=&quot;Search and Filter Controls&quot;&gt;
+            &lt;div class=&quot;search-wrapper&quot;&gt;
+                &lt;i class=&quot;fa-solid fa-magnifying-glass search-icon&quot;&gt;&lt;/i&gt;
+                &lt;input type=&quot;text&quot; id=&quot;search-bar&quot; placeholder=&quot;Search Spring AI release notes (e.g. advisor, ToolCalling, memory)...&quot; aria-label=&quot;Search updates&quot;&gt;
+                &lt;button id=&quot;clear-search-btn&quot; class=&quot;clear-btn&quot; aria-label=&quot;Clear search&quot;&gt;&lt;i class=&quot;fa-solid fa-xmark&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;filter-wrapper&quot;&gt;
+                &lt;span class=&quot;filter-title&quot;&gt;Topic:&lt;/span&gt;
+                &lt;div class=&quot;filter-pills&quot; id=&quot;filter-pills-container&quot;&gt;
+                    &lt;button class=&quot;pill active&quot; data-filter=&quot;all&quot;&gt;All Updates&lt;/button&gt;
+                    &lt;!-- Pills dynamically populated or hardcoded for layout --&gt;
+                    &lt;button class=&quot;pill&quot; data-filter=&quot;Advisors&quot;&gt;Advisors&lt;/button&gt;
+                    &lt;button class=&quot;pill&quot; data-filter=&quot;Tool Calling &amp; MCP&quot;&gt;Tool Calling &amp; MCP&lt;/button&gt;
+                    &lt;button class=&quot;pill&quot; data-filter=&quot;Models &amp; Providers&quot;&gt;Models &amp; Providers&lt;/button&gt;
+                    &lt;button class=&quot;pill&quot; data-filter=&quot;Vector Databases&quot;&gt;Vector DBs&lt;/button&gt;
+                    &lt;button class=&quot;pill&quot; data-filter=&quot;Structured Output&quot;&gt;Structured Output&lt;/button&gt;
+                    &lt;button class=&quot;pill&quot; data-filter=&quot;General&quot;&gt;General&lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;!-- Selection Hint Banner --&gt;
+        &lt;div id=&quot;selection-tip&quot; class=&quot;selection-tip&quot;&gt;
+            &lt;i class=&quot;fa-solid fa-circle-info&quot;&gt;&lt;/i&gt;
+            &lt;span&gt;Tip: Click on update cards below to select and compile them into a Tweet draft automatically.&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Main Content Area --&gt;
+        &lt;main class=&quot;main-layout&quot;&gt;
+            &lt;!-- Loading State --&gt;
+            &lt;div id=&quot;loading-state&quot; class=&quot;state-container&quot;&gt;
+                &lt;div class=&quot;loader-spinner&quot;&gt;&lt;/div&gt;
+                &lt;p&gt;Scraping upgrade-notes.html from Spring Docs...&lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Error State --&gt;
+            &lt;div id=&quot;error-state&quot; class=&quot;state-container hidden&quot;&gt;
+                &lt;div class=&quot;error-badge&quot;&gt;&lt;i class=&quot;fa-solid fa-triangle-exclamation&quot;&gt;&lt;/i&gt;&lt;/div&gt;
+                &lt;h2&gt;Retrieval Failure&lt;/h2&gt;
+                &lt;p id=&quot;error-message-text&quot;&gt;Failed to fetch release notes from the Spring documentation server.&lt;/p&gt;
+                &lt;button id=&quot;retry-btn&quot; class=&quot;btn btn-secondary&quot;&gt;Retry Sync&lt;/button&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Empty State --&gt;
+            &lt;div id=&quot;empty-state&quot; class=&quot;state-container hidden&quot;&gt;
+                &lt;div class=&quot;empty-badge&quot;&gt;&lt;i class=&quot;fa-solid fa-clipboard-question&quot;&gt;&lt;/i&gt;&lt;/div&gt;
+                &lt;h2&gt;No Updates Match Search Criteria&lt;/h2&gt;
+                &lt;p&gt;Try clearing your keyword filters or checking other categories.&lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Timeline --&gt;
+            &lt;div id=&quot;timeline-wrapper&quot; class=&quot;timeline-wrapper hidden&quot;&gt;
+                &lt;!-- Grouped timeline updates go here --&gt;
+            &lt;/div&gt;
+        &lt;/main&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Floating Tweet Composer Drawer --&gt;
+    &lt;div id=&quot;tweet-drawer&quot; class=&quot;tweet-drawer collapsed&quot;&gt;
+        &lt;div class=&quot;drawer-header&quot;&gt;
+            &lt;div class=&quot;drawer-title&quot;&gt;
+                &lt;i class=&quot;fa-brands fa-x-twitter&quot;&gt;&lt;/i&gt;
+                &lt;span&gt;Tweet Composer&lt;/span&gt;
+                &lt;span class=&quot;badge&quot; id=&quot;selected-badge&quot;&gt;0 selected&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;button id=&quot;close-drawer-btn&quot; class=&quot;btn-close&quot; aria-label=&quot;Close composer&quot;&gt;&lt;i class=&quot;fa-solid fa-xmark&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;drawer-body&quot;&gt;
+            &lt;div class=&quot;textarea-container&quot;&gt;
+                &lt;textarea id=&quot;tweet-textarea&quot; placeholder=&quot;Select release updates above to prefill and draft your tweet here...&quot;&gt;&lt;/textarea&gt;
+                &lt;div class=&quot;char-progress-bar&quot; id=&quot;char-progress-bar&quot;&gt;
+                    &lt;div class=&quot;progress-fill&quot; id=&quot;progress-fill&quot;&gt;&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;char-details&quot;&gt;
+                    &lt;span id=&quot;char-count-text&quot;&gt;0 / 280&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;drawer-actions&quot;&gt;
+                &lt;button id=&quot;clear-selection-btn&quot; class=&quot;btn btn-secondary flex-grow-1&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-trash-can&quot;&gt;&lt;/i&gt; Clear
+                &lt;/button&gt;
+                &lt;button id=&quot;copy-tweet-btn&quot; class=&quot;btn btn-secondary&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-copy&quot;&gt;&lt;/i&gt; Copy
+                &lt;/button&gt;
+                &lt;button id=&quot;post-x-btn&quot; class=&quot;btn btn-twitter flex-grow-2&quot;&gt;
+                    &lt;i class=&quot;fa-brands fa-x-twitter&quot;&gt;&lt;/i&gt; Post to X
+                &lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Floating Back to Top Button --&gt;
+    &lt;button id=&quot;scroll-top-btn&quot; class=&quot;scroll-top-btn hidden&quot; title=&quot;Go to top&quot; aria-label=&quot;Go to top&quot;&gt;
+        &lt;i class=&quot;fa-solid fa-arrow-up&quot;&gt;&lt;/i&gt;
+    &lt;/button&gt;
+
+    &lt;!-- Toast Notifications --&gt;
+    &lt;div id=&quot;toast-container&quot; class=&quot;toast-container&quot;&gt;&lt;/div&gt;
+
+    &lt;!-- Custom JavaScript --&gt;
+    &lt;script src=&quot;{{ url_for(&#x27;static&#x27;, filename=&#x27;js/app.js&#x27;) }}&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- Page 5: static/css/style.css -->
+                <div class="chapter-container" data-chapter="5">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Dashboard Styles</h3>
+                        <h1 class="chap-title">style.css</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-css">/* ==========================================================================
+   SPRING AI RELEASE PULSE - STYLING SHEET
+   ========================================================================== */
+
+:root {
+    /* Fonts */
+    --font-primary: &#x27;Plus Jakarta Sans&#x27;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif;
+    --font-mono: &#x27;JetBrains Mono&#x27;, source-code-pro, Menlo, Monaco, Consolas, monospace;
+
+    /* Spring Theme Color System (Dark Mode Defaults) */
+    --bg-main: #0c0f12;
+    --bg-surface: rgba(20, 26, 33, 0.6);
+    --bg-surface-hover: rgba(28, 37, 48, 0.8);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-color-hover: rgba(255, 255, 255, 0.16);
+
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+
+    /* Theme Accents */
+    --primary: #6db33f;
+    --primary-glow: rgba(109, 179, 63, 0.15);
+    --primary-hover: #85d14e;
+    
+    --accent-blue: #3b82f6;
+    --accent-blue-glow: rgba(59, 130, 246, 0.15);
+    --accent-purple: #a855f7;
+    --accent-purple-glow: rgba(168, 85, 247, 0.15);
+    --accent-orange: #f97316;
+    --accent-orange-glow: rgba(249, 115, 22, 0.15);
+    --accent-red: #ef4444;
+    --accent-red-glow: rgba(239, 68, 68, 0.15);
+
+    /* Twitter Color */
+    --twitter-color: #1d9bf0;
+    --twitter-hover: #1a8cd8;
+
+    /* Transitions &amp; Shadows */
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    --shadow-sm: 0 2px 8px -2px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 16px 40px -8px rgba(0, 0, 0, 0.7);
+    --shadow-glow: 0 0 20px rgba(109, 179, 63, 0.2);
+
+    --border-radius-sm: 8px;
+    --border-radius-md: 16px;
+    --border-radius-lg: 24px;
+}
+
+/* Light Theme Variables Override */
+.light-theme {
+    --bg-main: #f4f6f8;
+    --bg-surface: rgba(255, 255, 255, 0.75);
+    --bg-surface-hover: rgba(255, 255, 255, 0.95);
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-color-hover: rgba(0, 0, 0, 0.15);
+
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+
+    --shadow-sm: 0 2px 8px -2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 16px 40px -8px rgba(0, 0, 0, 0.12);
+    
+    --primary-glow: rgba(109, 179, 63, 0.08);
+    --accent-blue-glow: rgba(59, 130, 246, 0.08);
+    --accent-purple-glow: rgba(168, 85, 247, 0.08);
+    --accent-orange-glow: rgba(249, 115, 22, 0.08);
+    --accent-red-glow: rgba(239, 68, 68, 0.08);
+}
+
+/* ==========================================================================
+   RESET &amp; FOUNDATION
+   ========================================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color var(--transition-normal), color var(--transition-normal);
+    position: relative;
+    padding-bottom: 60px; /* Space for drawer */
+}
+
+/* Decorative Background Gradients */
+.background-radial {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(150px);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.12;
+    transition: opacity var(--transition-normal);
+}
+
+.bg-1 {
+    top: -10%;
+    left: -10%;
+    background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+}
+
+.bg-2 {
+    bottom: -10%;
+    right: -10%;
+    background: radial-gradient(circle, var(--accent-blue) 0%, transparent 70%);
+}
+
+.light-theme .background-radial {
+    opacity: 0.06;
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.light-theme ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.light-theme ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   LAYOUT STRUCTURE
+   ========================================================================== */
+
+.app-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* ==========================================================================
+   COMPONENTS: HEADER
+   ========================================================================== */
+
+.app-header {
+    background: var(--bg-surface);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: 20px 24px;
+    box-shadow: var(--shadow-md);
+}
+
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo-container {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+    border-radius: var(--border-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    box-shadow: 0 4px 14px rgba(109, 179, 63, 0.4);
+    animation: pulseGlow 3s infinite alternate;
+}
+
+@keyframes pulseGlow {
+    0% { box-shadow: 0 4px 14px rgba(109, 179, 63, 0.4); }
+    100% { box-shadow: 0 4px 24px rgba(109, 179, 63, 0.7); }
+}
+
+.title-details h1 {
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--text-primary) 30%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-primary);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(109, 179, 63, 0.2);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(109, 179, 63, 0.35);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background-color: var(--bg-surface-hover);
+    border-color: var(--border-color-hover);
+}
+
+.btn-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--border-radius-sm);
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.btn-icon:hover {
+    background-color: var(--bg-surface-hover);
+    border-color: var(--border-color-hover);
+    transform: scale(1.03);
+}
+
+/* ==========================================================================
+   STATS CARD OVERVIEW
+   ========================================================================== */
+
+.stats-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: var(--bg-surface);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+/* Color Coding Stat Cards */
+.accent-green .stat-icon { background: rgba(109, 179, 63, 0.15); color: var(--primary); }
+.accent-green:hover { border-color: rgba(109, 179, 63, 0.3); box-shadow: 0 8px 30px rgba(109, 179, 63, 0.08); }
+
+.accent-blue .stat-icon { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+.accent-blue:hover { border-color: rgba(59, 130, 246, 0.3); box-shadow: 0 8px 30px rgba(59, 130, 246, 0.08); }
+
+.accent-purple .stat-icon { background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); }
+.accent-purple:hover { border-color: rgba(168, 85, 247, 0.3); box-shadow: 0 8px 30px rgba(168, 85, 247, 0.08); }
+
+.accent-orange .stat-icon { background: rgba(249, 115, 22, 0.15); color: var(--accent-orange); }
+.accent-orange:hover { border-color: rgba(249, 115, 22, 0.3); box-shadow: 0 8px 30px rgba(249, 115, 22, 0.08); }
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-top: 4px;
+}
+
+/* ==========================================================================
+   CONTROLS BAR (Search &amp; Filters)
+   ========================================================================== */
+
+.controls-bar {
+    background: var(--bg-surface);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: var(--shadow-sm);
+}
+
+.search-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.search-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 16px;
+    pointer-events: none;
+}
+
+#search-bar {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    padding: 14px 48px 14px 48px;
+    font-family: var(--font-primary);
+    color: var(--text-primary);
+    font-size: 15px;
+    outline: none;
+    transition: all var(--transition-fast);
+}
+
+.light-theme #search-bar {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+#search-bar:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(109, 179, 63, 0.25);
+}
+
+.clear-btn {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 16px;
+    display: none;
+    padding: 4px;
+    transition: color var(--transition-fast);
+}
+
+.clear-btn:hover {
+    color: var(--text-primary);
+}
+
+.filter-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+.filter-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pill {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-family: var(--font-primary);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.light-theme .pill {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.pill:hover {
+    background-color: rgba(255, 255, 255, 0.07);
+    color: var(--text-primary);
+    border-color: var(--border-color-hover);
+}
+
+.light-theme .pill:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.pill.active {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 4px 10px rgba(109, 179, 63, 0.25);
+}
+
+/* ==========================================================================
+   STATES
+   ========================================================================== */
+
+.state-container {
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 16px;
+    background: var(--bg-surface);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    min-height: 300px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Spinner Loader */
+.loader-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(109, 179, 63, 0.15);
+    border-left-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.error-badge, .empty-badge {
+    font-size: 48px;
+    color: var(--accent-red);
+    margin-bottom: 8px;
+}
+
+.empty-badge {
+    color: var(--text-muted);
+}
+
+.state-container h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.state-container p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+#refresh-icon.spinning {
+    animation: spin 1s linear infinite;
+}
+
+/* ==========================================================================
+   TIMELINE &amp; RELEASE CARDS
+   ========================================================================== */
+
+.timeline-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.timeline-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Version Marker on Timeline */
+.timeline-version-marker {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    padding-left: 20px;
+}
+
+.version-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    border: 3px solid var(--bg-main);
+    box-shadow: 0 0 10px var(--primary);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.version-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+    padding: 4px 12px;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+}
+
+.cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-left: 20px;
+    border-left: 1px solid var(--border-color);
+    margin-left: 5px;
+}
+
+/* Card Styling */
+.release-card {
+    background: var(--bg-surface);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    position: relative;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+}
+
+.release-card:hover {
+    transform: translateX(4px);
+    border-color: var(--border-color-hover);
+    box-shadow: var(--shadow-md);
+}
+
+/* Selected Card Highlight */
+.release-card.selected {
+    background-color: rgba(109, 179, 63, 0.05);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-glow);
+}
+
+/* Checkbox Column */
+.checkbox-column {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 4px;
+}
+
+.custom-checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    color: transparent;
+    font-size: 11px;
+}
+
+.release-card:hover .custom-checkbox {
+    border-color: var(--text-secondary);
+}
+
+.release-card.selected .custom-checkbox {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+/* Card Body Details */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Badges for categorization */
+.badge {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.badge-advisors { background-color: rgba(168, 85, 247, 0.12); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.2); }
+.badge-tooling { background-color: rgba(59, 130, 246, 0.12); color: var(--accent-blue); border: 1px solid rgba(59, 130, 246, 0.2); }
+.badge-models { background-color: rgba(249, 115, 22, 0.12); color: var(--accent-orange); border: 1px solid rgba(249, 115, 22, 0.2); }
+.badge-general { background-color: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid var(--border-color); }
+
+.sub-category-tag {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-inline-action {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    font-size: 13px;
+}
+
+.btn-inline-action:hover {
+    color: var(--text-primary);
+    border-color: var(--border-color-hover);
+    background-color: var(--bg-surface-hover);
+    transform: scale(1.05);
+}
+
+.btn-inline-action.tweet-action:hover {
+    color: var(--twitter-color);
+    border-color: rgba(29, 155, 240, 0.3);
+    background-color: rgba(29, 155, 240, 0.05);
+}
+
+/* Card Content Details */
+.card-title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--text-primary);
+}
+
+.card-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* Style parsed HTML content nicely */
+.card-text p {
+    margin-bottom: 12px;
+}
+
+.card-text p:last-child {
+    margin-bottom: 0;
+}
+
+.card-text code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #f43f5e; /* Sleek pink for code highlights */
+}
+
+.light-theme .card-text code {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.card-text .listingblock, .card-text pre {
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 14px;
+    margin: 12px 0;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+}
+
+.light-theme .card-text .listingblock, .light-theme .card-text pre {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.card-text pre code {
+    background-color: transparent;
+    padding: 0;
+    color: var(--text-primary);
+}
+
+.card-text ul {
+    margin-left: 20px;
+    margin-bottom: 12px;
+}
+
+.card-text li {
+    margin-bottom: 6px;
+}
+
+/* Tables inside cards */
+.card-text table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13px;
+}
+
+.card-text th, .card-text td {
+    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.card-text th {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.light-theme .card-text th {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Tip / Warning Admonitions */
+.card-text .admonitionblock {
+    margin: 12px 0;
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 4px solid var(--primary);
+    background-color: rgba(109, 179, 63, 0.05);
+}
+
+.card-text .admonitionblock.tip {
+    border-left-color: var(--primary);
+}
+
+.card-text .admonitionblock.important, .card-text .admonitionblock.warning {
+    border-left-color: var(--accent-orange);
+    background-color: rgba(249, 115, 22, 0.05);
+}
+
+.card-text .admonitionblock.note {
+    border-left-color: var(--accent-blue);
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+/* ==========================================================================
+   TWEET DRAWER
+   ========================================================================== */
+
+.tweet-drawer {
+    position: fixed;
+    bottom: 0;
+    right: 30px;
+    width: 450px;
+    background: rgba(15, 20, 25, 0.95);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: none;
+    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--transition-slow);
+}
+
+.light-theme .tweet-drawer {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.tweet-drawer.collapsed {
+    transform: translateY(100%);
+}
+
+.drawer-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.light-theme .drawer-header {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+.drawer-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-primary);
+}
+
+.drawer-title i {
+    color: var(--twitter-color);
+    font-size: 18px;
+}
+
+.badge {
+    background-color: rgba(109, 179, 63, 0.2);
+    color: var(--primary);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.btn-close {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    transition: color var(--transition-fast);
+}
+
+.btn-close:hover {
+    color: var(--text-primary);
+}
+
+.drawer-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.textarea-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+#tweet-textarea {
+    width: 100%;
+    height: 150px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--border-radius-sm);
+    padding: 12px;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-size: 14px;
+    resize: none;
+    outline: none;
+    line-height: 1.5;
+    transition: border-color var(--transition-fast);
+}
+
+.light-theme #tweet-textarea {
+    background-color: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+#tweet-textarea:focus {
+    border-color: var(--twitter-color);
+}
+
+.char-progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.light-theme .char-progress-bar {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0;
+    background-color: var(--primary);
+    transition: width 0.2s ease, background-color 0.2s ease;
+}
+
+.char-details {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 6px;
+}
+
+#char-count-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.char-details.warning #char-count-text { color: var(--accent-orange); }
+.char-details.danger #char-count-text { color: var(--accent-red); }
+
+.drawer-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-twitter {
+    background-color: var(--twitter-color);
+    color: white;
+}
+
+.btn-twitter:hover {
+    background-color: var(--twitter-hover);
+    box-shadow: 0 4px 14px rgba(29, 155, 240, 0.3);
+    transform: translateY(-1px);
+}
+
+.flex-grow-1 { flex-grow: 1; }
+.flex-grow-2 { flex-grow: 2; }
+
+/* ==========================================================================
+   TOAST NOTIFICATIONS
+   ========================================================================== */
+
+.toast-container {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+}
+
+.toast {
+    background: rgba(20, 26, 33, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    padding: 12px 20px;
+    border-radius: var(--border-radius-sm);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-md);
+    transform: translateX(50px);
+    opacity: 0;
+    animation: toastIn var(--transition-normal) forwards;
+}
+
+.light-theme .toast {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.toast.success { border-left: 4px solid var(--primary); }
+.toast.success i { color: var(--primary); }
+
+.toast.error { border-left: 4px solid var(--accent-red); }
+.toast.error i { color: var(--accent-red); }
+
+.toast.info { border-left: 4px solid var(--accent-blue); }
+.toast.info i { color: var(--accent-blue); }
+
+@keyframes toastIn {
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ==========================================================================
+   SELECTION TIP, SCROLL TO TOP &amp; TOAST CLOSE
+   ========================================================================== */
+
+.selection-tip {
+    background-color: rgba(109, 179, 63, 0.05);
+    border: 1px dashed rgba(109, 179, 63, 0.3);
+    border-radius: var(--border-radius-sm);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-sm);
+    animation: fadeIn var(--transition-normal);
+}
+
+.selection-tip i {
+    color: var(--primary);
+    font-size: 16px;
+}
+
+.scroll-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-fast), opacity var(--transition-fast), transform var(--transition-fast);
+    z-index: 999;
+}
+
+.scroll-top-btn:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(109, 179, 63, 0.4);
+}
+
+.scroll-top-btn.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+}
+
+.toast {
+    position: relative;
+    padding-right: 40px; /* Space for close button */
+}
+
+.toast .toast-close {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    transition: color var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toast .toast-close:hover {
+    color: var(--text-primary);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .app-wrapper {
+        padding: 16px 12px;
+        gap: 20px;
+    }
+
+    .logo-container {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    .title-details h1 {
+        font-size: 20px;
+    }
+
+    .tweet-drawer {
+        right: 0;
+        width: 100%;
+        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+    }
+
+    .stats-overview {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-overview {
+        grid-template-columns: 1fr;
+    }
+
+    .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .header-actions {
+        justify-content: flex-end;
+    }
+}
+</code></pre>
+                    </div>
+                </div>
+
+                <!-- Page 6: static/js/app.js -->
+                <div class="chapter-container" data-chapter="6">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Dashboard Script</h3>
+                        <h1 class="chap-title">app.js</h1>
+                    </header>
+                    <div class="chapter-body" style="text-align: left;">
+                        <pre class="line-numbers"><code class="language-javascript">/* ==========================================================================
+   SPRING AI RELEASE PULSE - APPLICATION SCRIPT
+   ========================================================================== */
+
+document.addEventListener(&#x27;DOMContentLoaded&#x27;, () =&gt; {
+    // Application State
+    const state = {
+        updates: [],
+        selectedUpdates: new Set(),
+        currentFilter: &#x27;all&#x27;,
+        searchQuery: &#x27;&#x27;,
+        theme: localStorage.getItem(&#x27;theme&#x27;) || &#x27;dark&#x27;
+    };
+
+    // DOM Elements
+    const elements = {
+        body: document.body,
+        themeToggle: document.getElementById(&#x27;theme-toggle&#x27;),
+        refreshBtn: document.getElementById(&#x27;refresh-btn&#x27;),
+        refreshIcon: document.getElementById(&#x27;refresh-icon&#x27;),
+        searchBar: document.getElementById(&#x27;search-bar&#x27;),
+        clearSearchBtn: document.getElementById(&#x27;clear-search-btn&#x27;),
+        filterPills: document.getElementById(&#x27;filter-pills-container&#x27;),
+        timelineWrapper: document.getElementById(&#x27;timeline-wrapper&#x27;),
+        loadingState: document.getElementById(&#x27;loading-state&#x27;),
+        errorState: document.getElementById(&#x27;error-state&#x27;),
+        errorMessageText: document.getElementById(&#x27;error-message-text&#x27;),
+        emptyState: document.getElementById(&#x27;empty-state&#x27;),
+        retryBtn: document.getElementById(&#x27;retry-btn&#x27;),
+        
+        // Stats Values
+        valLatestVersion: document.getElementById(&#x27;val-latest-version&#x27;),
+        valTotalUpdates: document.getElementById(&#x27;val-total-updates&#x27;),
+        valToolingUpdates: document.getElementById(&#x27;val-tooling-updates&#x27;),
+        valDbUpdates: document.getElementById(&#x27;val-db-updates&#x27;),
+        
+        // Tweet Drawer
+        tweetDrawer: document.getElementById(&#x27;tweet-drawer&#x27;),
+        selectedBadge: document.getElementById(&#x27;selected-badge&#x27;),
+        closeDrawerBtn: document.getElementById(&#x27;close-drawer-btn&#x27;),
+        tweetTextarea: document.getElementById(&#x27;tweet-textarea&#x27;),
+        progressFill: document.getElementById(&#x27;progress-fill&#x27;),
+        charCountText: document.getElementById(&#x27;char-count-text&#x27;),
+        clearSelectionBtn: document.getElementById(&#x27;clear-selection-btn&#x27;),
+        copyTweetBtn: document.getElementById(&#x27;copy-tweet-btn&#x27;),
+        postXBtn: document.getElementById(&#x27;post-x-btn&#x27;),
+        exportCsvBtn: document.getElementById(&#x27;export-csv-btn&#x27;),
+        scrollTopBtn: document.getElementById(&#x27;scroll-top-btn&#x27;),
+        
+        toastContainer: document.getElementById(&#x27;toast-container&#x27;)
+    };
+
+    // Initialize Theme
+    initTheme();
+    
+    // Initial Fetch
+    fetchUpdates(false);
+
+    // Event Listeners
+    elements.themeToggle.addEventListener(&#x27;click&#x27;, toggleTheme);
+    elements.refreshBtn.addEventListener(&#x27;click&#x27;, () =&gt; fetchUpdates(true));
+    elements.retryBtn.addEventListener(&#x27;click&#x27;, () =&gt; fetchUpdates(true));
+    elements.searchBar.addEventListener(&#x27;input&#x27;, handleSearch);
+    elements.clearSearchBtn.addEventListener(&#x27;click&#x27;, clearSearch);
+    elements.closeDrawerBtn.addEventListener(&#x27;click&#x27;, () =&gt; toggleDrawer(false));
+    elements.clearSelectionBtn.addEventListener(&#x27;click&#x27;, clearAllSelections);
+    elements.copyTweetBtn.addEventListener(&#x27;click&#x27;, copyTweetToClipboard);
+    elements.postXBtn.addEventListener(&#x27;click&#x27;, postTweetToX);
+    elements.exportCsvBtn.addEventListener(&#x27;click&#x27;, exportToCSV);
+    elements.tweetTextarea.addEventListener(&#x27;input&#x27;, updateCharProgressBar);
+
+    // Back to Top Button Actions
+    window.addEventListener(&#x27;scroll&#x27;, () =&gt; {
+        if (window.scrollY &gt; 300) {
+            elements.scrollTopBtn.classList.remove(&#x27;hidden&#x27;);
+        } else {
+            elements.scrollTopBtn.classList.add(&#x27;hidden&#x27;);
+        }
+    });
+    elements.scrollTopBtn.addEventListener(&#x27;click&#x27;, () =&gt; {
+        window.scrollTo({ top: 0, behavior: &#x27;smooth&#x27; });
+    });
+
+    // Filter Pills Event Delegation
+    elements.filterPills.addEventListener(&#x27;click&#x27;, (e) =&gt; {
+        const pill = e.target.closest(&#x27;.pill&#x27;);
+        if (!pill) return;
+        
+        elements.filterPills.querySelectorAll(&#x27;.pill&#x27;).forEach(p =&gt; p.classList.remove(&#x27;active&#x27;));
+        pill.classList.add(&#x27;active&#x27;);
+        
+        state.currentFilter = pill.dataset.filter;
+        renderTimeline();
+    });
+
+    // ==========================================
+    // BACKEND DATA SYNC
+    // ==========================================
+
+    async function fetchUpdates(force = false) {
+        showState(&#x27;loading&#x27;);
+        elements.refreshIcon.classList.add(&#x27;spinning&#x27;);
+        elements.refreshBtn.disabled = true;
+
+        try {
+            const url = force ? &#x27;/api/releases?force=true&#x27; : &#x27;/api/releases&#x27;;
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Server returned HTTP ${response.status}`);
+            }
+            const data = await response.json();
+            
+            if (data.status === &#x27;success&#x27; || data.status === &#x27;warning&#x27;) {
+                state.updates = data.releases;
+                calculateStats();
+                updateFilterPillCounts();
+                renderTimeline();
+                showState(&#x27;content&#x27;);
+                
+                if (data.status === &#x27;warning&#x27;) {
+                    showToast(data.message, &#x27;error&#x27;);
+                } else {
+                    const cacheMsg = data.cached ? &#x27;Loaded cached release notes&#x27; : &#x27;Scraped live release notes&#x27;;
+                    showToast(cacheMsg, &#x27;success&#x27;);
+                }
+            } else {
+                throw new Error(data.message || &#x27;Unknown server error&#x27;);
+            }
+        } catch (error) {
+            console.error(&#x27;Error Syncing release notes:&#x27;, error);
+            elements.errorMessageText.textContent = `Scrape Error: ${error.message}`;
+            showState(&#x27;error&#x27;);
+            showToast(&#x27;Failed to sync release notes&#x27;, &#x27;error&#x27;);
+        } finally {
+            elements.refreshIcon.classList.remove(&#x27;spinning&#x27;);
+            elements.refreshBtn.disabled = false;
+        }
+    }
+
+    // ==========================================
+    // STATISTICS CALCULATION
+    // ==========================================
+
+    function calculateStats() {
+        if (state.updates.length === 0) {
+            elements.valLatestVersion.textContent = &#x27;N/A&#x27;;
+            elements.valTotalUpdates.textContent = &#x27;0&#x27;;
+            elements.valToolingUpdates.textContent = &#x27;0&#x27;;
+            elements.valDbUpdates.textContent = &#x27;0&#x27;;
+            return;
+        }
+
+        // The latest release is the first one parsed
+        elements.valLatestVersion.textContent = state.updates[0].version;
+        elements.valTotalUpdates.textContent = state.updates.length;
+
+        const tooling = state.updates.filter(u =&gt; 
+            u.category === &#x27;Advisors&#x27; || u.category === &#x27;Tool Calling &amp; MCP&#x27;
+        ).length;
+        
+        const dbs = state.updates.filter(u =&gt; u.category === &#x27;Vector Databases&#x27;).length;
+
+        elements.valToolingUpdates.textContent = tooling;
+        elements.valDbUpdates.textContent = dbs;
+    }
+
+    // ==========================================
+    // TIMELINE RENDERER
+    // ==========================================
+
+    function renderTimeline() {
+        const filtered = filterUpdates();
+        
+        if (filtered.length === 0) {
+            showState(&#x27;empty&#x27;);
+            return;
+        }
+
+        showState(&#x27;content&#x27;);
+        elements.timelineWrapper.innerHTML = &#x27;&#x27;;
+
+        // Group updates by Version
+        const groups = {};
+        filtered.forEach(update =&gt; {
+            if (!groups[update.version]) {
+                groups[update.version] = [];
+            }
+            groups[update.version].push(update);
+        });
+
+        // Generate timeline UI elements
+        Object.entries(groups).forEach(([version, updates]) =&gt; {
+            const groupDiv = document.createElement(&#x27;div&#x27;);
+            groupDiv.className = &#x27;timeline-group&#x27;;
+
+            // Version marker
+            const marker = document.createElement(&#x27;div&#x27;);
+            marker.className = &#x27;timeline-version-marker&#x27;;
+            marker.innerHTML = `
+                &lt;div class=&quot;version-dot&quot;&gt;&lt;/div&gt;
+                &lt;div class=&quot;version-title&quot;&gt;Version ${version}&lt;/div&gt;
+            `;
+            groupDiv.appendChild(marker);
+
+            // Card list container
+            const cardsList = document.createElement(&#x27;div&#x27;);
+            cardsList.className = &#x27;cards-list&#x27;;
+
+            updates.forEach(update =&gt; {
+                const card = document.createElement(&#x27;div&#x27;);
+                const isSelected = state.selectedUpdates.has(update.id);
+                card.className = `release-card ${isSelected ? &#x27;selected&#x27; : &#x27;&#x27;}`;
+                card.dataset.id = update.id;
+
+                const badgeClass = getBadgeClass(update.category);
+
+                card.innerHTML = `
+                    &lt;div class=&quot;checkbox-column&quot;&gt;
+                        &lt;div class=&quot;custom-checkbox&quot; aria-label=&quot;Select update to tweet&quot;&gt;
+                            &lt;i class=&quot;fa-solid fa-check&quot;&gt;&lt;/i&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;card-body&quot;&gt;
+                        &lt;div class=&quot;card-header&quot;&gt;
+                            &lt;div class=&quot;card-meta&quot;&gt;
+                                &lt;span class=&quot;badge ${badgeClass}&quot;&gt;${update.category}&lt;/span&gt;
+                                &lt;span class=&quot;sub-category-tag&quot;&gt;${update.sub_category}&lt;/span&gt;
+                            &lt;/div&gt;
+                            &lt;div class=&quot;card-actions&quot;&gt;
+                                &lt;button class=&quot;btn-inline-action copy-action&quot; title=&quot;Copy update text&quot;&gt;
+                                    &lt;i class=&quot;fa-regular fa-copy&quot;&gt;&lt;/i&gt;
+                                &lt;/button&gt;
+                                &lt;button class=&quot;btn-inline-action tweet-action&quot; title=&quot;Tweet this update&quot;&gt;
+                                    &lt;i class=&quot;fa-brands fa-x-twitter&quot;&gt;&lt;/i&gt;
+                                &lt;/button&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;h3 class=&quot;card-title&quot;&gt;${update.title}&lt;/h3&gt;
+                        &lt;div class=&quot;card-text&quot;&gt;
+                            ${update.html_content}
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                `;
+
+                // Card Click - toggle selection (prevent triggers on interactive elements)
+                card.addEventListener(&#x27;click&#x27;, (e) =&gt; {
+                    if (e.target.closest(&#x27;a&#x27;) || e.target.closest(&#x27;.btn-inline-action&#x27;) || e.target.closest(&#x27;pre&#x27;) || e.target.closest(&#x27;code&#x27;)) {
+                        return; 
+                    }
+                    toggleCardSelection(update.id);
+                });
+
+                // Copy single action click
+                card.querySelector(&#x27;.copy-action&#x27;).addEventListener(&#x27;click&#x27;, (e) =&gt; {
+                    e.stopPropagation();
+                    const cleanText = `${update.title}\n\n${cleanHtml(update.html_content)}`;
+                    copyToClipboard(cleanText);
+                    
+                    // Direct icon checkmark visual feedback
+                    const copyBtn = card.querySelector(&#x27;.copy-action&#x27;);
+                    const icon = copyBtn.querySelector(&#x27;i&#x27;);
+                    icon.className = &#x27;fa-solid fa-check&#x27;;
+                    icon.style.color = &#x27;var(--primary)&#x27;;
+                    setTimeout(() =&gt; {
+                        icon.className = &#x27;fa-regular fa-copy&#x27;;
+                        icon.style.color = &#x27;&#x27;;
+                    }, 1500);
+
+                    showToast(&#x27;Copied update to clipboard&#x27;, &#x27;info&#x27;);
+                });
+
+                // Tweet single action click
+                card.querySelector(&#x27;.tweet-action&#x27;).addEventListener(&#x27;click&#x27;, (e) =&gt; {
+                    e.stopPropagation();
+                    const tweetTxt = formatSingleTweet(update);
+                    const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetTxt)}`;
+                    window.open(tweetUrl, &#x27;_blank&#x27;);
+                });
+
+                cardsList.appendChild(card);
+            });
+
+            groupDiv.appendChild(cardsList);
+            elements.timelineWrapper.appendChild(groupDiv);
+        });
+    }
+
+    function filterUpdates() {
+        return state.updates.filter(update =&gt; {
+            // Pill filter match
+            if (state.currentFilter !== &#x27;all&#x27; &amp;&amp; update.category !== state.currentFilter) {
+                return false;
+            }
+            
+            // Search query match
+            if (state.searchQuery.trim() !== &#x27;&#x27;) {
+                const query = state.searchQuery.toLowerCase();
+                const inTitle = update.title.toLowerCase().includes(query);
+                const inContent = update.html_content.toLowerCase().includes(query);
+                const inCategory = update.category.toLowerCase().includes(query);
+                const inSubCategory = update.sub_category.toLowerCase().includes(query);
+                const inVersion = update.version.toLowerCase().includes(query);
+                
+                return inTitle || inContent || inCategory || inSubCategory || inVersion;
+            }
+
+            return true;
+        });
+    }
+
+    function getBadgeClass(category) {
+        switch (category) {
+            case &#x27;Advisors&#x27;: return &#x27;badge-advisors&#x27;;
+            case &#x27;Tool Calling &amp; MCP&#x27;: return &#x27;badge-tooling&#x27;;
+            case &#x27;Models &amp; Providers&#x27;: return &#x27;badge-models&#x27;;
+            default: return &#x27;badge-general&#x27;;
+        }
+    }
+
+    // ==========================================
+    // INTERACTIVE SELECTION &amp; DRAWER LOGIC
+    // ==========================================
+
+    function toggleCardSelection(updateId) {
+        if (state.selectedUpdates.has(updateId)) {
+            state.selectedUpdates.delete(updateId);
+        } else {
+            state.selectedUpdates.add(updateId);
+        }
+
+        // Fast DOM toggle
+        const card = elements.timelineWrapper.querySelector(`.release-card[data-id=&quot;${updateId}&quot;]`);
+        if (card) {
+            card.classList.toggle(&#x27;selected&#x27;);
+        }
+
+        updateTweetComposer();
+    }
+
+    function clearAllSelections() {
+        state.selectedUpdates.clear();
+        elements.timelineWrapper.querySelectorAll(&#x27;.release-card&#x27;).forEach(c =&gt; {
+            c.classList.remove(&#x27;selected&#x27;);
+        });
+        updateTweetComposer();
+        showToast(&#x27;Cleared all selections&#x27;, &#x27;info&#x27;);
+    }
+
+    function updateTweetComposer() {
+        const count = state.selectedUpdates.size;
+        elements.selectedBadge.textContent = `${count} selected`;
+
+        if (count === 0) {
+            toggleDrawer(false);
+            return;
+        }
+
+        toggleDrawer(true);
+
+        const selectedItems = state.updates.filter(u =&gt; state.selectedUpdates.has(u.id));
+        let composedText = &#x27;&#x27;;
+
+        if (selectedItems.length === 1) {
+            composedText = formatSingleTweet(selectedItems[0]);
+        } else {
+            // Thread/Bullet list consolidation
+            const version = selectedItems[0].version;
+            composedText = `Spring AI Release Updates (v${version}):\n`;
+            
+            selectedItems.forEach((u, idx) =&gt; {
+                const bullet = `\n${idx + 1}. [${u.category}] ${u.title}`;
+                composedText += bullet;
+            });
+            
+            // Add a link footer
+            composedText += `\n\nRead the full details at docs.spring.io/spring-ai`;
+        }
+
+        elements.tweetTextarea.value = composedText;
+        updateCharProgressBar();
+    }
+
+    function formatSingleTweet(update) {
+        const cleanContent = cleanHtml(update.html_content);
+        // Truncate cleanly for single tweet to keep under X limit if content is too long
+        let text = cleanContent;
+        if (text.length &gt; 180) {
+            text = text.substring(0, 177) + &#x27;...&#x27;;
+        }
+        return `Spring AI Update (v${update.version}):\n\n[${update.category}] ${update.title}\n${text}\n\nDocs: ${update.link}`;
+    }
+
+    function updateCharProgressBar() {
+        const text = elements.tweetTextarea.value;
+        const count = text.length;
+        elements.charCountText.textContent = `${count} / 280`;
+
+        const percent = Math.min((count / 280) * 100, 100);
+        elements.progressFill.style.width = `${percent}%`;
+
+        // Update colors depending on remaining character threshold
+        const container = elements.charCountText.parentNode;
+        container.className = &#x27;char-details&#x27;;
+        elements.progressFill.style.backgroundColor = &#x27;var(--primary)&#x27;;
+
+        if (count &gt; 280) {
+            container.classList.add(&#x27;danger&#x27;);
+            elements.progressFill.style.backgroundColor = &#x27;var(--accent-red)&#x27;;
+        } else if (count &gt; 240) {
+            container.classList.add(&#x27;warning&#x27;);
+            elements.progressFill.style.backgroundColor = &#x27;var(--accent-orange)&#x27;;
+        }
+    }
+
+    function toggleDrawer(open) {
+        if (open) {
+            elements.tweetDrawer.classList.remove(&#x27;collapsed&#x27;);
+        } else {
+            elements.tweetDrawer.classList.add(&#x27;collapsed&#x27;);
+        }
+    }
+
+    function postTweetToX() {
+        const text = elements.tweetTextarea.value;
+        if (text.length &gt; 280) {
+            if (!confirm(`Your text contains ${text.length} characters (exceeds 280-char limit). It will be truncated on X/Twitter. Post anyway?`)) {
+                return;
+            }
+        }
+        const tweetUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
+        window.open(tweetUrl, &#x27;_blank&#x27;);
+    }
+
+    function copyTweetToClipboard() {
+        copyToClipboard(elements.tweetTextarea.value);
+        showToast(&#x27;Tweet copied to clipboard!&#x27;, &#x27;success&#x27;);
+    }
+
+    // ==========================================
+    // CONTROLS &amp; UTILITIES
+    // ==========================================
+
+    function handleSearch(e) {
+        state.searchQuery = e.target.value;
+        if (state.searchQuery.trim() !== &#x27;&#x27;) {
+            elements.clearSearchBtn.style.display = &#x27;block&#x27;;
+        } else {
+            elements.clearSearchBtn.style.display = &#x27;none&#x27;;
+        }
+        renderTimeline();
+    }
+
+    function clearSearch() {
+        elements.searchBar.value = &#x27;&#x27;;
+        state.searchQuery = &#x27;&#x27;;
+        elements.clearSearchBtn.style.display = &#x27;none&#x27;;
+        renderTimeline();
+    }
+
+    function copyToClipboard(text) {
+        const el = document.createElement(&#x27;textarea&#x27;);
+        el.value = text;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand(&#x27;copy&#x27;);
+        document.body.removeChild(el);
+    }
+
+    function cleanHtml(htmlStr) {
+        const temp = document.createElement(&#x27;div&#x27;);
+        temp.innerHTML = htmlStr;
+        
+        // Strip out pre blocks/code blocks from text to keep tweet concise
+        temp.querySelectorAll(&#x27;.listingblock, pre&#x27;).forEach(el =&gt; el.remove());
+        
+        // Replace inner codes with backticks to look readable on Twitter
+        temp.querySelectorAll(&#x27;code&#x27;).forEach(c =&gt; {
+            c.replaceWith(`\`${c.textContent}\``);
+        });
+
+        let text = temp.textContent || temp.innerText || &quot;&quot;;
+        // Replace consecutive newlines or whitespaces
+        return text.replace(/\s+/g, &#x27; &#x27;).trim();
+    }
+
+    function showState(mode) {
+        elements.loadingState.classList.add(&#x27;hidden&#x27;);
+        elements.errorState.classList.add(&#x27;hidden&#x27;);
+        elements.emptyState.classList.add(&#x27;hidden&#x27;);
+        elements.timelineWrapper.classList.add(&#x27;hidden&#x27;);
+
+        if (mode === &#x27;loading&#x27;) elements.loadingState.classList.remove(&#x27;hidden&#x27;);
+        else if (mode === &#x27;error&#x27;) elements.errorState.classList.remove(&#x27;hidden&#x27;);
+        else if (mode === &#x27;empty&#x27;) elements.emptyState.classList.remove(&#x27;hidden&#x27;);
+        else if (mode === &#x27;content&#x27;) elements.timelineWrapper.classList.remove(&#x27;hidden&#x27;);
+    }
+
+    function showToast(message, type = &#x27;info&#x27;) {
+        const toast = document.createElement(&#x27;div&#x27;);
+        toast.className = `toast ${type}`;
+        
+        let icon = &#x27;fa-circle-info&#x27;;
+        if (type === &#x27;success&#x27;) icon = &#x27;fa-circle-check&#x27;;
+        if (type === &#x27;error&#x27;) icon = &#x27;fa-triangle-exclamation&#x27;;
+
+        toast.innerHTML = `
+            &lt;i class=&quot;fa-solid ${icon}&quot;&gt;&lt;/i&gt;
+            &lt;span&gt;${message}&lt;/span&gt;
+            &lt;button class=&quot;toast-close&quot; aria-label=&quot;Close alert&quot;&gt;&lt;i class=&quot;fa-solid fa-xmark&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+        `;
+        
+        // Bind click on close button
+        toast.querySelector(&#x27;.toast-close&#x27;).addEventListener(&#x27;click&#x27;, (e) =&gt; {
+            e.stopPropagation();
+            toast.remove();
+        });
+
+        elements.toastContainer.appendChild(toast);
+        
+        // Exit animation timer
+        setTimeout(() =&gt; {
+            if (toast.parentNode) {
+                toast.style.transition = &#x27;opacity 0.4s ease, transform 0.4s ease&#x27;;
+                toast.style.opacity = &#x27;0&#x27;;
+                toast.style.transform = &#x27;translateX(50px)&#x27;;
+                setTimeout(() =&gt; toast.remove(), 400);
+            }
+        }, 4000);
+    }
+
+    function updateFilterPillCounts() {
+        const counts = {
+            all: state.updates.length,
+            Advisors: state.updates.filter(u =&gt; u.category === &#x27;Advisors&#x27;).length,
+            &#x27;Tool Calling &amp; MCP&#x27;: state.updates.filter(u =&gt; u.category === &#x27;Tool Calling &amp; MCP&#x27;).length,
+            &#x27;Models &amp; Providers&#x27;: state.updates.filter(u =&gt; u.category === &#x27;Models &amp; Providers&#x27;).length,
+            &#x27;Vector Databases&#x27;: state.updates.filter(u =&gt; u.category === &#x27;Vector Databases&#x27;).length,
+            &#x27;Structured Output&#x27;: state.updates.filter(u =&gt; u.category === &#x27;Structured Output&#x27;).length,
+            General: state.updates.filter(u =&gt; u.category === &#x27;General&#x27;).length
+        };
+
+        elements.filterPills.querySelectorAll(&#x27;.pill&#x27;).forEach(pill =&gt; {
+            const filter = pill.dataset.filter;
+            const count = counts[filter] !== undefined ? counts[filter] : 0;
+            
+            let label = filter;
+            if (filter === &#x27;all&#x27;) label = &#x27;All Updates&#x27;;
+            else if (filter === &#x27;Vector Databases&#x27;) label = &#x27;Vector DBs&#x27;;
+            
+            pill.textContent = `${label} (${count})`;
+        });
+    }
+
+    function exportToCSV() {
+        const filtered = filterUpdates();
+        if (filtered.length === 0) {
+            showToast(&#x27;No updates to export&#x27;, &#x27;error&#x27;);
+            return;
+        }
+
+        const headers = [&#x27;Version&#x27;, &#x27;Category&#x27;, &#x27;Sub-Category&#x27;, &#x27;Title&#x27;, &#x27;Description&#x27;, &#x27;Link&#x27;];
+        
+        const rows = filtered.map(u =&gt; [
+            u.version,
+            u.category,
+            u.sub_category,
+            u.title,
+            cleanHtml(u.html_content),
+            u.link
+        ]);
+
+        const csvContent = [
+            headers.join(&#x27;,&#x27;),
+            ...rows.map(row =&gt; row.map(val =&gt; `&quot;${String(val).replace(/&quot;/g, &#x27;&quot;&quot;&#x27;)}&quot;`).join(&#x27;,&#x27;))
+        ].join(&#x27;\n&#x27;);
+
+        const blob = new Blob([csvContent], { type: &#x27;text/csv;charset=utf-8;&#x27; });
+        const link = document.createElement(&#x27;a&#x27;);
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute(&#x27;href&#x27;, url);
+        link.setAttribute(&#x27;download&#x27;, `spring_ai_release_notes.csv`);
+        link.style.visibility = &#x27;hidden&#x27;;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showToast(`Exported ${filtered.length} updates to CSV`, &#x27;success&#x27;);
+    }
+
+    // ==========================================
+    // THEME SWITCHER
+    // ==========================================
+
+    function initTheme() {
+        if (state.theme === &#x27;light&#x27;) {
+            elements.body.classList.remove(&#x27;dark-theme&#x27;);
+            elements.body.classList.add(&#x27;light-theme&#x27;);
+            elements.themeToggle.innerHTML = &#x27;&lt;i class=&quot;fa-solid fa-sun&quot;&gt;&lt;/i&gt;&#x27;;
+        } else {
+            elements.body.classList.add(&#x27;dark-theme&#x27;);
+            elements.body.classList.remove(&#x27;light-theme&#x27;);
+            elements.themeToggle.innerHTML = &#x27;&lt;i class=&quot;fa-solid fa-moon&quot;&gt;&lt;/i&gt;&#x27;;
+        }
+    }
+
+    function toggleTheme() {
+        if (elements.body.classList.contains(&#x27;dark-theme&#x27;)) {
+            elements.body.classList.remove(&#x27;dark-theme&#x27;);
+            elements.body.classList.add(&#x27;light-theme&#x27;);
+            elements.themeToggle.innerHTML = &#x27;&lt;i class=&quot;fa-solid fa-sun&quot;&gt;&lt;/i&gt;&#x27;;
+            state.theme = &#x27;light&#x27;;
+        } else {
+            elements.body.classList.add(&#x27;dark-theme&#x27;);
+            elements.body.classList.remove(&#x27;light-theme&#x27;);
+            elements.themeToggle.innerHTML = &#x27;&lt;i class=&quot;fa-solid fa-moon&quot;&gt;&lt;/i&gt;&#x27;;
+            state.theme = &#x27;dark&#x27;;
+        }
+        localStorage.setItem(&#x27;theme&#x27;, state.theme);
+        showToast(`Theme switched to ${state.theme} mode`, &#x27;info&#x27;);
+    }
+});
+</code></pre>
+                    </div>
+                </div>
+            </div>\n        </article>
 
         <!-- Pagination Controls -->
         <footer class="page-footer">
@@ -891,7 +3299,21 @@ graph TD
                     { label: "Chapter IV: Logic & Tweeter", icon: "fa-hashtag" }
                 ]
             },
-            upgrade_notes: {
+            source_code: {
+                title: "Source Code",
+                meta: "Project Files",
+                audio: "",
+                totalPages: 7,
+                toc: [
+                    { label: "Title Page", icon: "fa-feather" },
+                    { label: "app.py", icon: "fa-python" },
+                    { label: "generate_audio.ps1", icon: "fa-terminal" },
+                    { label: "run.ps1", icon: "fa-terminal" },
+                    { label: "index.html", icon: "fa-html5" },
+                    { label: "style.css", icon: "fa-css3-alt" },
+                    { label: "app.js", icon: "fa-js" }
+                ]
+            },\n            upgrade_notes: {
                 title: "Spring AI Upgrades",
                 meta: "Migration Guide",
                 audio: "",
