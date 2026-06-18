@@ -859,6 +859,7 @@ graph TD
                         <p>Database schemas have updated to support precise message ordering. The <code>JdbcChatMemoryRepository</code> table adds a new <code>sequence_id</code> column (BIGINT) to guarantee correct ordering across MySQL, Postgres, and SQLite, where timestamp precision alone was non-deterministic. Old databases require schemas to be migrated or rebuilt.</p>
                         <p>New starters are also introduced to facilitate setup: <code>spring-ai-starter-tool-search-advisor</code> provides auto-configurations for semantic tool filtering. These additions drastically reduce boilerplate configurations and allow search indexing type configurations (regex, lucene, vector) out of the box.</p>
                     </div>
+                </div>
             </div>
 
             <!-- BOOK 5: PROJECT SOURCE CODE -->
