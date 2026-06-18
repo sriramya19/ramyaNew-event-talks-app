@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Detailed summary notes, miracles, and Q&A transcripts from the June M&M Class with Sri Bhagavan.">
+    <title>June M&M Class Notes & Divine Teachings</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            /* Spiritual Serene Palette */
+            --bg-main: #06090d;
+            --bg-card: rgba(18, 24, 32, 0.6);
+            --bg-card-hover: rgba(26, 35, 47, 0.85);
+            --border-color: rgba(255, 255, 255, 0.06);
+            
+            --gold: #dfb15b;
+            --gold-glow: rgba(223, 177, 91, 0.15);
+            --gold-hover: #f0c97f;
+            
+            --teal: #14b8a6;
+            --purple: #a855f7;
+            --pink: #ec4899;
+            --blue: #3b82f6;
+
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.7);
+            --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.8);
+
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Glassmorphic decorative circles */
+        .decor-circle {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+
+        .circle-1 {
+            top: -10%;
+            left: 20%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+        }
+
+        .circle-2 {
+            bottom: 10%;
+            right: 10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--purple) 0%, transparent 70%);
+        }
+
+        /* App Wrapper */
+        .wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* ==========================================
+           HEADER SECTION
+           ========================================== */
+        
+        .header {
+            text-align: center;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 60px 40px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--purple) 50%, var(--teal) 100%);
+        }
+
+        .sacred-icon {
+            font-size: 44px;
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(223, 177, 91, 0.4);
+            animation: spinSlow 15s linear infinite;
+        }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header h1 {
+            font-family: var(--font-display);
+            font-size: 38px;
+            font-weight: 800;
+            color: var(--gold);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .header p.subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 24px auto;
+            line-height: 1.6;
+        }
+
+        .header-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            background-color: rgba(255, 255, 255, 0.02);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .meta-item i {
+            color: var(--gold);
+        }
+
+        /* ==========================================
+           QUICK OVERVIEW & TEACHING BANNER
+           ========================================== */
+
+        .teaching-intro {
+            background: rgba(20, 184, 166, 0.04);
+            border-left: 4px solid var(--teal);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .intro-icon {
+            font-size: 28px;
+            color: var(--teal);
+            padding-top: 4px;
+        }
+
+        .intro-content h2 {
+            font-family: var(--font-display);
+            font-size: 20px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .intro-content p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ==========================================
+           MAIN CONTENT & SECTIONS
+           ========================================== */
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 26px;
+            color: var(--gold);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .section-title i {
+            font-size: 22px;
+        }
+
+        .cards-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(223, 177, 91, 0.2);
+            box-shadow: var(--shadow-md);
+            background: var(--bg-card-hover);
+        }
+
+        /* Badge Styling */
+        .card-badge {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .badge-miracle { background-color: rgba(236, 72, 153, 0.1); color: var(--pink); border: 1px solid rgba(236, 72, 153, 0.2); }
+        .badge-teaching { background-color: rgba(20, 184, 166, 0.1); color: var(--teal); border: 1px solid rgba(20, 184, 166, 0.2); }
+        .badge-qa { background-color: rgba(168, 85, 247, 0.1); color: var(--purple); border: 1px solid rgba(168, 85, 247, 0.2); }
+
+        .card-topic {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .card h3.title {
+            font-family: var(--font-display);
+            font-size: 22px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            padding-right: 100px; /* Leave space for badge */
+        }
+
+        .card h3.qa-question {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.5;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--purple);
+            margin-bottom: 20px;
+        }
+
+        .card h3.qa-question i {
+            color: var(--purple);
+            margin-right: 8px;
+        }
+
+        .card-text {
+            font-size: 14.5px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .card-text p {
+            margin-bottom: 12px;
+        }
+
+        .card-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Q&A specific blocks */
+        .qa-answer {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .qa-answer::before {
+            content: "Bhagavan:";
+            position: absolute;
+            left: -60px;
+            top: 0;
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gold);
+            background: rgba(223, 177, 91, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            transform: translateX(40px);
+        }
+
+        .qa-answer-text {
+            padding-left: 10px;
+        }
+
+        /* Quotes in Miracles */
+        blockquote.testimonial {
+            border-left: 2px solid var(--gold);
+            padding-left: 16px;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin: 16px 0;
+        }
+
+        /* ==========================================
+           SACRED SLOKA SECTION
+           ========================================== */
+
+        .sloka-card {
+            background: radial-gradient(circle at top right, rgba(223, 177, 91, 0.08) 0%, var(--bg-card) 60%);
+            border-color: rgba(223, 177, 91, 0.2);
+            text-align: center;
+            padding: 40px;
+        }
+
+        .sloka-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .sloka-lyrics {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-style: italic;
+            color: var(--text-primary);
+            line-height: 1.8;
+            letter-spacing: 0.02em;
+            margin-bottom: 24px;
+        }
+
+        .sloka-meaning {
+            font-size: 14px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 16px;
+        }
+
+        /* ==========================================
+           FOOTER ACTIONS
+           ========================================== */
+        
+        .footer-actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-gold {
+            background-color: var(--gold);
+            color: var(--bg-main);
+            box-shadow: 0 4px 14px rgba(223, 177, 91, 0.25);
+        }
+
+        .btn-gold:hover {
+            background-color: var(--gold-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(223, 177, 91, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-color: var(--border-color-hover);
+        }
+
+        /* Custom notifications */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(40px);
+            background: rgba(18, 24, 32, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--primary);
+            border-left: 4px solid var(--gold);
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-lg);
+            z-index: 10000;
+            font-size: 14px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Custom printing configurations */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            .decor-circle, .footer-actions, .toast {
+                display: none !important;
+            }
+            .header, .card {
+                background: transparent;
+                border: 1px solid #ddd;
+                box-shadow: none !important;
+            }
+            .header h1, .section-title, .sloka-title {
+                color: #8a6d3b !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decor-circle circle-1"></div>
+    <div class="decor-circle circle-2"></div>
+
+    <div class="wrapper">
+        <!-- Header -->
+        <header class="header">
+            <div class="sacred-icon"><i class="fa-solid fa-dharmachakra"></i></div>
+            <h1>June M&M Class Notes</h1>
+            <p class="subtitle">Official teachings, miracle sharings, and question & answer transcriptions from the sacred Morning Conference with Sri Bhagavan.</p>
+            <div class="header-meta">
+                <span class="meta-item"><i class="fa-regular fa-calendar"></i> June 17, 2026</span>
+                <span class="meta-item"><i class="fa-solid fa-location-dot"></i> Oneness University</span>
+                <span class="meta-item"><i class="fa-solid fa-book-open"></i> Teachings Log</span>
+            </div>
+        </header>
+
+        <!-- Divine Teaching Banner -->
+        <div class="teaching-intro">
+            <div class="intro-icon"><i class="fa-solid fa-circle-info"></i></div>
+            <div class="intro-content">
+                <h2>The Power of Reading, Hearing & Sharing Miracles</h2>
+                <p>Sri Bhagavan teaches that <strong>miracles multiply when they are read, heard, and shared</strong>. When we are shown a miracle, we must observe it carefully to draw it into our own lives. Transformation sharing prepares the listener's brain for changes that qualify them for the global transition.</p>
+            </div>
+        </div>
+
+        <!-- Section: Miracle Testimonials -->
+        <section aria-label="Miracle Testimonials">
+            <h2 class="section-title"><i class="fa-solid fa-star-and-crescent"></i> Miracle & Transformation Sharing</h2>
+            <div class="cards-grid">
+                
+                <!-- Testimonial 1 -->
+                <article class="card">
+                    <span class="card-badge badge-miracle">Miracle</span>
+                    <span class="card-topic">Divine Protection</span>
+                    <h3 class="title">The Guardian Angel of the Sea</h3>
+                    <div class="card-text">
+                        <p>A testimonial shared by the wife of a skeptic. While her husband was a devoted follower of Sri Amma Bhagavan, she remained logical and doubtful for 18 years. Her perspective changed completely after a vision and a recollected memory.</p>
+                        <blockquote class="testimonial">
+                            "Ten years ago, I fell into a turbulent sea and was drowning. A fair-skinned lady pulled me out of the deep sea using just a little finger. I thought I hallucinated and forgot it. Now, years later in the presence of Sri Bhagavan, I lay down and saw the lady. She turned, smiled, and said: 'Who else but me could have pulled you out of the turbulent sea with a little finger?' It was Sri Bhagavathy Padmavathi Amma."
+                        </blockquote>
+                        <p>This experience transformed her from a skeptic to one deeply, passionately, and unrestrainedly in love with the Divine.</p>
+                    </div>
+                </article>
+
+                <!-- Testimonial 2 -->
+                <article class="card">
+                    <span class="card-badge badge-miracle">Miracle</span>
+                    <span class="card-topic">Medical Healing</span>
+                    <h3 class="title">Safe breach-baby rotation and Instant Bone Healing</h3>
+                    <div class="card-text">
+                        <p>Shared by <strong>Dr. Mukta Ovdani</strong>, a gynecologist from Honnavar, Uttar Kannada, Karnataka, who has been in the Dharma for 21 years:</p>
+                        <ul>
+                            <li><strong>Spine & Abdomen Cure</strong>: Having injured her lower abdomen and fractured her right lower back bone, she attended the online Sahasranama Homa the following day. She was completely and instantly cured.</li>
+                            <li><strong>Breach Baby Miracle</strong>: In her medical practice, a patient arrived with a baby in a leg-down (breach) position. As she tried to correct it, she had a vision of tiny Sri Bhagavan entering the abdomen and gently rotating the baby's head down for a safe delivery.</li>
+                            <li><strong>Resuscitation</strong>: She recalled another case where a baby appeared lifeless at birth. After chanting and praying, the baby returned to life.</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Testimonial 3 -->
+                <article class="card">
+                    <span class="card-badge badge-miracle">Miracle</span>
+                    <span class="card-topic">Creative Grace</span>
+                    <h3 class="title">Divine Composition & Sanskrit Padukas</h3>
+                    <div class="card-text">
+                        <p>Dr. Mukta shared that despite never learning the Sanskrit language, under the influence of Sri Amma Bhagavan and touching their padukas, she began writing detailed Sanskrit slokas and composed over 5,000 spiritual songs. Through her, works like the <em>Gitopadesh of Kaliyug</em>, <em>Satyabodha</em>, <em>Mahakavya</em>, and <em>Hemagolam</em> were written.</p>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- Section: Q&A with Sri Bhagavan -->
+        <section aria-label="Q&A with Sri Bhagavan">
+            <h2 class="section-title"><i class="fa-solid fa-comments"></i> Questions & Answers with Sri Bhagavan</h2>
+            <div class="cards-grid">
+
+                <!-- Q1 -->
+                <article class="card">
+                    <span class="card-badge badge-qa">Q&A</span>
+                    <span class="card-topic">Family Breakthroughs</span>
+                    <h3 class="qa-question"><i class="fa-regular fa-circle-question"></i> Can one family member's benediction bring Bhakti, surrender, and mukti to the rest of the family?</h3>
+                    <div class="card-text qa-answer">
+                        <p class="qa-answer-text"><strong>Yes, it is entirely possible</strong>. If one family member receives it as a benediction, that is how it will flow to the other family members.</p>
+                    </div>
+                </article>
+
+                <!-- Q2 -->
+                <article class="card">
+                    <span class="card-badge badge-qa">Q&A</span>
+                    <span class="card-topic">Respecting Women</span>
+                    <h3 class="qa-question"><i class="fa-regular fa-circle-question"></i> Sri Bhagavan teaches that if we respect women, we will receive grace immediately. How do we make this a reality?</h3>
+                    <div class="card-text qa-answer">
+                        <p class="qa-answer-text">Respecting women alters brain functioning. In ancient times, God was viewed as a female (a Goddess) rather than a male, and females were highly respected. Historically, as male egos sought to dominate, they suppressed the female deities—even the ancient Jewish/Christian God, Yahweh, had a wife whose statues were eventually broken and buried.</p>
+                        <p class="qa-answer-text">To receive grace, you must change this condition by learning to respect, value, and love the women in your life—your mother, your wife, your daughter. When this happens, your brain begins to function differently, facilitating divine downloads.</p>
+                    </div>
+                </article>
+
+                <!-- Q3 -->
+                <article class="card">
+                    <span class="card-badge badge-qa">Q&A</span>
+                    <span class="card-topic">Peak States</span>
+                    <h3 class="qa-question"><i class="fa-regular fa-circle-question"></i> What exactly is a "Peak State" and what is the experience?</h3>
+                    <div class="card-text qa-answer">
+                        <p class="qa-answer-text">To understand a peak state, one must look at quantum physics and the brain. Essentially, <strong>a peak state is when the physical brain becomes completely quiet</strong>.</p>
+                        <p class="qa-answer-text">When the brain is quiet, it connects to other realms where deities exist. In this state, solutions are downloaded directly. Examples include:</p>
+                        <ul>
+                            <li><strong>Ramanujan</strong>: He went into peak states while sleeping, where the Goddess Namagiri downloaded complex mathematical formulas directly into his mind.</li>
+                            <li><strong>Albert Einstein & Isaac Newton</strong>: Both had the capacity to quiet their brains, allowing the download of the laws of physics and gravity.</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Q4 -->
+                <article class="card">
+                    <span class="card-badge badge-qa">Q&A</span>
+                    <span class="card-topic">Enlightenment Paths</span>
+                    <h3 class="qa-question"><i class="fa-regular fa-circle-question"></i> How do we proceed towards Enlightenment?</h3>
+                    <div class="card-text qa-answer">
+                        <p class="qa-answer-text">The path to enlightenment in the Dharma involves sequential courses:</p>
+                        <ol>
+                            <li>Participating in the <strong>Bhakti Dhyana</strong> programs and Homas.</li>
+                            <li>Completing the <strong>Art of Fulfillment</strong> (11-day program).</li>
+                            <li>Completing the <strong>Art of Transformation</strong> (11-day program).</li>
+                            <li>Completing the <strong>Art of Enlightenment</strong> (11-day program).</li>
+                        </ol>
+                    </div>
+                </article>
+
+                <!-- Q5 -->
+                <article class="card">
+                    <span class="card-badge badge-qa">Q&A</span>
+                    <span class="card-topic">Divine Bonding</span>
+                    <h3 class="qa-question"><i class="fa-regular fa-circle-question"></i> What is the best way to develop a strong bond with Sri Amma Bhagavan?</h3>
+                    <div class="card-text qa-answer">
+                        <p class="qa-answer-text">The bond with the Divine is a reflection of your earthly relationships. <strong>If you take good care of your parents and keep your relationships healthy</strong> (with your spouse, children, and parents), you will automatically receive a strong bond with the Divine.</p>
+                    </div>
+                </article>
+
+                <!-- Q6 -->
+                <article class="card">
+                    <span class="card-badge badge-qa">Q&A</span>
+                    <span class="card-topic">Detachment vs Indifference</span>
+                    <h3 class="qa-question"><i class="fa-regular fa-circle-question"></i> What is the difference between indifference and detachment?</h3>
+                    <div class="card-text qa-answer">
+                        <p class="qa-answer-text"><strong>Detachment</strong> is when you see that you are everything; it is built on Oneness. When you realize Oneness, detachment is natural.</p>
+                        <p class="qa-answer-text"><strong>Indifference</strong> occurs when you try to escape the world or become something else, often abandoning your responsibilities or family. True detachment does not require escaping to the mountains.</p>
+                    </div>
+                </article>
+
+                <!-- Q7 -->
+                <article class="card">
+                    <span class="card-badge badge-qa">Q&A</span>
+                    <span class="card-topic">True Bhakti</span>
+                    <h3 class="qa-question"><i class="fa-regular fa-circle-question"></i> What is real Bhakti and how does it grow?</h3>
+                    <div class="card-text qa-answer">
+                        <p class="qa-answer-text">Bhakti often starts as "bogus" or transactional Bhakti (asking for favors). However, as the brain quiets down and enters a peak state, <strong>real Bhakti arises</strong>. You realize that you are not the doer, and a natural state of gratitude and devotion flows.</p>
+                    </div>
+                </article>
+
+                <!-- Q8 -->
+                <article class="card">
+                    <span class="card-badge badge-qa">Q&A</span>
+                    <span class="card-topic">Kalki Dharma vs Oneness</span>
+                    <h3 class="qa-question"><i class="fa-regular fa-circle-question"></i> What is the difference between Kalki Dharma and the Oneness Movement?</h3>
+                    <div class="card-text qa-answer">
+                        <p class="qa-answer-text">While both share the same foundation and premises, the focus differs:</p>
+                        <ul>
+                            <li><strong>Kalki Dharma</strong>: Entirely Sri Amma Bhagavan centered. It relies on grace, and Deeksha is the main vehicle.</li>
+                            <li><strong>Oneness</strong>: Focused on the state of Oneness itself, relying heavily on self-effort and general spiritual processes.</li>
+                        </ul>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- Section: Sacred Song Lyrics -->
+        <section aria-label="Sanskrit Sloka">
+            <div class="card sloka-card">
+                <span class="card-badge badge-teaching">Sloka</span>
+                <div class="sacred-icon" style="animation: none;"><i class="fa-solid fa-om"></i></div>
+                <h2 class="sloka-title">June M&M Class Concluding Sloka</h2>
+                <div class="sloka-lyrics">
+                    <p>Bhagavaneshvara Satyayugeshvara</p>
+                    <p>Svarnayogeshvara Suvarnayogeshvara</p>
+                    <p>Hemayogeshvara Dharmayogeshvara</p>
+                    <p>Amma Bhagavaneshvara</p>
+                    <p>Tvam Eva Devam Kaliyuga Parivartakam</p>
+                </div>
+                <p class="sloka-meaning">Meaning: Responding to our prayers, You are the Lord of the Golden Age (Satyayuga), the Lord of the Divine Path (Dharma), Amma Bhagavan, the Divine Avatar changing and transforming the Kaliyuga.</p>
+            </div>
+        </section>
+
+        <!-- Footer Actions -->
+        <div class="footer-actions">
+            <button class="btn btn-gold" onclick="copyNotes()"><i class="fa-regular fa-copy"></i> Copy Class Notes</button>
+            <button class="btn btn-secondary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Notes</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-check"></i>
+        <span id="toast-message">Notes copied to clipboard!</span>
+    </div>
+
+    <script>
+        function copyNotes() {
+            const notes = `JUNE M&M CLASS NOTES - SUMMARY\n\n` +
+                          `1. Miracle: The Guardian Angel of the Sea\n` +
+                          `A woman saved from drowning realized 10 years later that her savior was Bhagavathy Padmavathi Amma.\n\n` +
+                          `2. Gynecologist Testimonials (Dr. Mukta Ovdani):\n` +
+                          `- Healing of fractured back bone and abdomen during Sahasranama Homa.\n` +
+                          `- Vision of tiny Bhagavan rotating a breach baby safely in the womb.\n` +
+                          `- Unlearned composition of 5,000+ Sanskrit slokas/songs.\n\n` +
+                          `3. Teachings summary:\n` +
+                          `- Miracles read, heard, and shared multiply.\n` +
+                          `- Respecting women changes brain functions and attracts divine grace.\n` +
+                          `- A peak state is when the physical brain becomes quiet, allowing cosmic downloads (e.g. Ramanujan, Newton, Einstein).\n` +
+                          `- The path to enlightenment involves sequential courses: Bhakti Dhyana, Art of Fulfillment, Art of Transformation, and Art of Enlightenment.\n` +
+                          `- Bond with the Divine grows from having healthy relationships with parents and spouse.`;
+
+            const el = document.createElement('textarea');
+            el.value = notes;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            showToast("Copied class notes summary to clipboard!");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
