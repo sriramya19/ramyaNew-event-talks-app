@@ -505,13 +505,18 @@
             <span class="meta">Architectural Guide</span>
             <h2>Antigravity CLI</h2>
         </div>
+
+        <div class="book-selector-area" style="margin-top: 10px; margin-bottom: 10px;">
+            <label for="book-select" style="font-family: var(--font-sans); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); display: block; margin-bottom: 6px;">Select Book</label>
+            <select id="book-select" onchange="switchBook(this.value)" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); background-color: var(--bg-book); color: var(--text-main); font-family: var(--font-sans); font-size: 12px; font-weight: 600; outline: none; cursor: pointer; transition: var(--transition);">
+                <option value="architecture">Antigravity Architecture</option>
+                <option value="imp_plan">Release Pulse Plan</option>
+                <option value="upgrade_notes">Spring AI Upgrade Notes</option>
+            </select>
+        </div>
+
         <ul class="toc-menu">
-            <li class="toc-item active" data-page="0"><i class="fa-solid fa-feather"></i> Title Page</li>
-            <li class="toc-item" data-page="1"><i class="fa-solid fa-layer-group"></i> Chapter I</li>
-            <li class="toc-item" data-page="2"><i class="fa-solid fa-arrows-spin"></i> Chapter II</li>
-            <li class="toc-item" data-page="3"><i class="fa-solid fa-shield-halved"></i> Chapter III</li>
-            <li class="toc-item" data-page="4"><i class="fa-solid fa-puzzle-piece"></i> Chapter IV</li>
-            <li class="toc-item" data-page="5"><i class="fa-solid fa-gears"></i> Chapter V</li>
+            <!-- Dynamically populated -->
         </ul>
 
         <div class="progress-container">
@@ -551,29 +556,31 @@
         <article class="book-page" id="book-page">
             <div class="bookmark-ribbon" id="bookmark-ribbon" onclick="loadBookmark()" title="Load Bookmark"></div>
 
-            <!-- Page 0: Title Page -->
-            <div class="chapter-container active" data-chapter="0">
-                <div style="text-align: center; margin-top: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
-                    <div style="font-size: 36px; color: var(--primary); margin-bottom: 24px;"><i class="fa-solid fa-dharmachakra"></i></div>
-                    <h1 style="font-family: var(--font-display); font-size: 30px; font-weight: 800; line-height: 1.4; margin-bottom: 16px;">Antigravity Architecture</h1>
-                    <p style="font-family: var(--font-display); font-size: 13px; letter-spacing: 0.2em; color: var(--text-secondary); margin-bottom: 48px;">Code Generation & Agentic Loops</p>
-                    <div style="width: 80px; height: 1px; background-color: var(--border-color); margin: 0 auto 30px auto;"></div>
-                    <p style="font-style: italic; color: var(--text-secondary); font-size: 15px; max-width: 340px; margin: 0 auto;">"A detailed guide to model interaction, filesystem pipelines, sandboxing, and customizable subagent networks."</p>
+            <!-- BOOK 1: ANTIGRAVITY ARCHITECTURE -->
+            <div class="book-section" id="book-architecture">
+                <!-- Page 0: Title Page -->
+                <div class="chapter-container active" data-chapter="0">
+                    <div style="text-align: center; margin-top: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                        <div style="font-size: 36px; color: var(--primary); margin-bottom: 24px;"><i class="fa-solid fa-dharmachakra"></i></div>
+                        <h1 style="font-family: var(--font-display); font-size: 30px; font-weight: 800; line-height: 1.4; margin-bottom: 16px;">Antigravity Architecture</h1>
+                        <p style="font-family: var(--font-display); font-size: 13px; letter-spacing: 0.2em; color: var(--text-secondary); margin-bottom: 48px;">Code Generation & Agentic Loops</p>
+                        <div style="width: 80px; height: 1px; background-color: var(--border-color); margin: 0 auto 30px auto;"></div>
+                        <p style="font-style: italic; color: var(--text-secondary); font-size: 15px; max-width: 340px; margin: 0 auto;">"A detailed guide to model interaction, filesystem pipelines, sandboxing, and customizable subagent networks."</p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Page 1: Chapter 1 -->
-            <div class="chapter-container" data-chapter="1">
-                <header class="chapter-header">
-                    <h3 class="chap-number">Chapter I</h3>
-                    <h1 class="chap-title">The Core Agentic Loop</h1>
-                </header>
-                <div class="chapter-body">
-                    <p>Antigravity is designed as a collaborative, agentic coding companion. Instead of operating as a single-prompt model, it bridges high-level reasoning with safe, local file and command execution pipelines. It is structured around an autonomous execution circle.</p>
-                    <p>When you present a prompt, the system routes the request through a specialized parser, appending context metrics. The central LLM (like Gemini) constructs a sequential plan and issues tool parameters. These calls are dynamically routed to the local execution sandbox, which contains file readers (view_file, list_dir), file writing editors (write_to_file, replace_file_content), browser monitors, and terminal command processes. The output is processed and returned, continuing the loop until completion.</p>
-                    
-                    <div class="mermaid-container" style="margin-top: 30px; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.02); overflow-x: auto;">
-                        <pre class="mermaid" style="text-align: center;">
+                <!-- Page 1: Chapter 1 -->
+                <div class="chapter-container" data-chapter="1">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter I</h3>
+                        <h1 class="chap-title">The Core Agentic Loop</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>Antigravity is designed as a collaborative, agentic coding companion. Instead of operating as a single-prompt model, it bridges high-level reasoning with safe, local file and command execution pipelines. It is structured around an autonomous execution circle.</p>
+                        <p>When you present a prompt, the system routes the request through a specialized parser, appending context metrics. The central LLM (like Gemini) constructs a sequential plan and issues tool parameters. These calls are dynamically routed to the local execution sandbox, which contains file readers (view_file, list_dir), file writing editors (write_to_file, replace_file_content), browser monitors, and terminal command processes. The output is processed and returned, continuing the loop until completion.</p>
+                        
+                        <div class="mermaid-container" style="margin-top: 30px; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.02); overflow-x: auto;">
+                            <pre class="mermaid" style="text-align: center;">
 flowchart TD
     User([User Prompt]) -->|Conversation Context| Model[Gemini Core LLM]
     Model -->|1. Generate Plan & Steps| Loop{Agentic Loop}
@@ -593,71 +600,207 @@ flowchart TD
     
     Context -->|Updated Conversation History| Model
     Loop -->|3. Goal Achieved| End([User Response / Clickable Artifacts])
-                        </pre>
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 2: Chapter 2 -->
+                <div class="chapter-container" data-chapter="2">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter II</h3>
+                        <h1 class="chap-title">The Four-Step Generation Cycle</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>Antigravity constructs directories and solves code bugs systematically using an interactive four-phase loop:</p>
+                        <ul>
+                            <li><strong>Context Assembly</strong>: Gathers conversational history, files currently active inside the developer's text editor, active cursor placement coordinates, and client platform characteristics.</li>
+                            <li><strong>Planning & Tool Selection</strong>: The model chooses necessary actions and triggers the relevant tool calls, defining detailed parameter payloads.</li>
+                            <li><strong>Execution & Feedback</strong>: The local sandbox executes the calls and returns stdout/stderr reports back into the active prompt window.</li>
+                            <li><strong>Self-Correction & Linting</strong>: If any command errors out or syntax issues are discovered during compilation, the model processes the logs and issues correct edits immediately.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Page 3: Chapter 3 -->
+                <div class="chapter-container" data-chapter="3">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter III</h3>
+                        <h1 class="chap-title">Sandboxing & Safe Command Gates</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>To secure local filesystems against unintended actions, the execution environment operates under double security gates:</p>
+                        <p><strong>Scope Restrictions</strong>: Writing permissions are restricted to the designated active workspace directory. Accessing system file trees, application registries, or external networks requires immediate explicit permission grants.</p>
+                        <p><strong>User Gatekeeping</strong>: All shell command proposals (such as launching Flask, installing requirements, or initializing Git repositories) are queued inside the task manager. They are blocked from running until the developer clicks "Approve". No arbitrary shell command runs on your system without your authorization.</p>
+                    </div>
+                </div>
+
+                <!-- Page 4: Chapter 4 -->
+                <div class="chapter-container" data-chapter="4">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter IV</h3>
+                        <h1 class="chap-title">Subagents & Collaborative Workspaces</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>For large scale engineering tasks, Antigravity delegates complex workflows to specialized subagents:</p>
+                        <ul>
+                            <li><strong>Specialized Profiles</strong>: It can spawn a <code>research</code> subagent (read-only) to inspect code patterns or a <code>self</code> subagent (inherits parent configuration) to build helper tools.</li>
+                            <li><strong>Workspace Branching</strong>: When a subagent is invoked, it can work in an inherited directory, a shared worktree, or a branched isolated workspace (similar to git worktree).</li>
+                            <li><strong>High-Concurrency Messaging</strong>: Subagents notify the parent agent upon completion, resolving problems in parallel without cluttering your main thread.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Page 5: Chapter 5 -->
+                <div class="chapter-container" data-chapter="5">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter V</h3>
+                        <h1 class="chap-title">Customizations & Plugin System</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>Antigravity adapts its behavior using a dual-scoped customization system:</p>
+                        <ul>
+                            <li><strong>Global Settings (<code>C:\Users\srira\.gemini\config</code>)</strong>: Houses universally applied rules, style parameters, and system behaviors.</li>
+                            <li><strong>Project Settings (<code>.agents/</code> / Workspace Root)</strong>: Manages workspace-specific rules, library constraints, and folder maps.</li>
+                            <li><strong>Skills (<code>SKILL.md</code>)</strong>: Custom task plans defined by the developer. If a task matches a skill's YAML frontmatter title, the instructions are dynamically loaded into the agent's memory.</li>
+                            <li><strong>Plugins</strong>: Specialized bundles of tool wrappers (such as <code>chrome-devtools-plugin</code> for browser testing and <code>google-antigravity-sdk</code> for SDK access) loaded dynamically based on app profiles.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
-            <!-- Page 2: Chapter 2 -->
-            <div class="chapter-container" data-chapter="2">
-                <header class="chapter-header">
-                    <h3 class="chap-number">Chapter II</h3>
-                    <h1 class="chap-title">The Four-Step Generation Cycle</h1>
-                </header>
-                <div class="chapter-body">
-                    <p>Antigravity constructs directories and solves code bugs systematically using an interactive four-phase loop:</p>
-                    <ul>
-                        <li><strong>Context Assembly</strong>: Gathers conversational history, files currently active inside the developer's text editor, active cursor placement coordinates, and client platform characteristics.</li>
-                        <li><strong>Planning & Tool Selection</strong>: The model chooses necessary actions and triggers the relevant tool calls, defining detailed parameter payloads.</li>
-                        <li><strong>Execution & Feedback</strong>: The local sandbox executes the calls and returns stdout/stderr reports back into the active prompt window.</li>
-                        <li><strong>Self-Correction & Linting</strong>: If any command errors out or syntax issues are discovered during compilation, the model processes the logs and issues correct edits immediately.</li>
-                    </ul>
+            <!-- BOOK 2: IMPLEMENTATION PLAN -->
+            <div class="book-section" id="book-imp_plan" style="display: none;">
+                <!-- Page 0: Title Page -->
+                <div class="chapter-container" data-chapter="0">
+                    <div style="text-align: center; margin-top: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                        <div style="font-size: 36px; color: var(--primary); margin-bottom: 24px;"><i class="fa-solid fa-compass-drafting"></i></div>
+                        <h1 style="font-family: var(--font-display); font-size: 30px; font-weight: 800; line-height: 1.4; margin-bottom: 16px;">Spring AI Release Pulse</h1>
+                        <p style="font-family: var(--font-display); font-size: 13px; letter-spacing: 0.2em; color: var(--text-secondary); margin-bottom: 48px;">Implementation Plan & Architecture</p>
+                        <div style="width: 80px; height: 1px; background-color: var(--border-color); margin: 0 auto 30px auto;"></div>
+                        <p style="font-style: italic; color: var(--text-secondary); font-size: 15px; max-width: 340px; margin: 0 auto;">"A roadmap for scraping, parsing, filtering, and publishing Spring AI upgrade notes."</p>
+                    </div>
+                </div>
+
+                <!-- Page 1: Chapter 1 -->
+                <div class="chapter-container" data-chapter="1">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter I</h3>
+                        <h1 class="chap-title">Objectives & Architecture</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>This document outlines the design and implementation details of the Spring AI Release Pulse web application. The core objective is to dynamically scrape the Spring AI Release Notes and parse updates by release version, grouping changes under category filters.</p>
+                        <p>The system is built on a Flask python backend that serves a JSON API to a vanilla HTML/CSS/JS frontend dashboard. Developers can select updates and compose consolidated tweet summaries directly into an integrated X Web Intent drawer.</p>
+                        
+                        <div class="mermaid-container" style="margin-top: 30px; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.02); overflow-x: auto;">
+                            <pre class="mermaid" style="text-align: center;">
+graph TD
+    A[docs.spring.io] -->|HTTP Scrape| B[Flask app.py]
+    B -->|JSON API /api/releases| C[Vanilla HTML/JS Frontend]
+    C -->|Interact & Filter| D[Timeline UI]
+    C -->|Select Card| E[Tweet Composer Drawer]
+    E -->|Copy/Post| F[X / Twitter Web Intent]
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page 2: Chapter 2 -->
+                <div class="chapter-container" data-chapter="2">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter II</h3>
+                        <h1 class="chap-title">Backend Scraping & Parsing</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>The backend scraping and caching layer is implemented in <code>app.py</code> using Python standard libraries and BeautifulSoup. It requests the official reference upgrade-notes.html using custom User-Agent headers, saving responses in a fast, in-memory cache.</p>
+                        <p>A custom heuristic parsing system extracts and organizes update sections. First, it identifies major version header containers (such as 2.0.0 or 1.1.x). Next, it parses sub-categories like Advisors or Tool Calling. If a sub-category has detailed sub-headings, it generates separate cards for each sub-topic; otherwise, it groups the entire category into a single timeline card. It categorizes updates dynamically based on title keywords matching tags like Advisors, Models, MCP, and Vector Databases.</p>
+                    </div>
+                </div>
+
+                <!-- Page 3: Chapter 3 -->
+                <div class="chapter-container" data-chapter="3">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter III</h3>
+                        <h1 class="chap-title">Frontend Design & CSS</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>The user interface is designed to wow the user with a modern glassmorphic look. By leveraging native CSS variables, the application transitions smoothly between dark and light themes. Elements are stylized using blur backdrops and subtle border glows matching the Spring Framework brand colors.</p>
+                        <p>The core layout uses a CSS Grid system for displaying metrics and category pills alongside a flexbox-driven timeline list. Active category pills filter updates on-the-fly and display real-time counts, helping developers navigate complex release histories in a simple, readable format.</p>
+                    </div>
+                </div>
+
+                <!-- Page 4: Chapter 4 -->
+                <div class="chapter-container" data-chapter="4">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter IV</h3>
+                        <h1 class="chap-title">UI Logic & X Integration</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>Interactive client behaviors are managed by <code>app.js</code>. The application dynamically compiles selected cards into the clipboard or the composer drawer. When a user checks one or more cards, a drawer slides in, aggregating titles and descriptions into a ready-to-post draft.</p>
+                        <p>The composer includes a character progress bar that turns red as it approaches the 280-character limit, warning the user of overflow. A one-click button fires a web intent that takes the compiled text directly to X/Twitter, providing a seamless sharing flow for developer advocates.</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Page 3: Chapter 3 -->
-            <div class="chapter-container" data-chapter="3">
-                <header class="chapter-header">
-                    <h3 class="chap-number">Chapter III</h3>
-                    <h1 class="chap-title">Sandboxing & Safe Command Gates</h1>
-                </header>
-                <div class="chapter-body">
-                    <p>To secure local filesystems against unintended actions, the execution environment operates under double security gates:</p>
-                    <p><strong>Scope Restrictions</strong>: Writing permissions are restricted to the designated active workspace directory. Accessing system file trees, application registries, or external networks requires immediate explicit permission grants.</p>
-                    <p><strong>User Gatekeeping</strong>: All shell command proposals (such as launching Flask, installing requirements, or initializing Git repositories) are queued inside the task manager. They are blocked from running until the developer clicks "Approve". No arbitrary shell command runs on your system without your authorization.</p>
+            <!-- BOOK 3: SPRING AI UPGRADE NOTES -->
+            <div class="book-section" id="book-upgrade_notes" style="display: none;">
+                <!-- Page 0: Title Page -->
+                <div class="chapter-container" data-chapter="0">
+                    <div style="text-align: center; margin-top: 80px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                        <div style="font-size: 36px; color: var(--primary); margin-bottom: 24px;"><i class="fa-solid fa-leaf"></i></div>
+                        <h1 style="font-family: var(--font-display); font-size: 30px; font-weight: 800; line-height: 1.4; margin-bottom: 16px;">Spring AI Upgrade Notes</h1>
+                        <p style="font-family: var(--font-display); font-size: 13px; letter-spacing: 0.2em; color: var(--text-secondary); margin-bottom: 48px;">Upgrading to Spring AI 2.0.0</p>
+                        <div style="width: 80px; height: 1px; background-color: var(--border-color); margin: 0 auto 30px auto;"></div>
+                        <p style="font-style: italic; color: var(--text-secondary); font-size: 15px; max-width: 340px; margin: 0 auto;">"Key breaking changes, migration steps, and new features in the Spring AI 2.0.0 release."</p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Page 4: Chapter 4 -->
-            <div class="chapter-container" data-chapter="4">
-                <header class="chapter-header">
-                    <h3 class="chap-number">Chapter IV</h3>
-                    <h1 class="chap-title">Subagents & Collaborative Workspaces</h1>
-                </header>
-                <div class="chapter-body">
-                    <p>For large scale engineering tasks, Antigravity delegates complex workflows to specialized subagents:</p>
-                    <ul>
-                        <li><strong>Specialized Profiles</strong>: It can spawn a <code>research</code> subagent (read-only) to inspect code patterns or a <code>self</code> subagent (inherits parent configuration) to build helper tools.</li>
-                        <li><strong>Workspace Branching</strong>: When a subagent is invoked, it can work in an inherited directory, a shared worktree, or a branched isolated workspace (similar to git worktree).</li>
-                        <li><strong>High-Concurrency Messaging</strong>: Subagents notify the parent agent upon completion, resolving problems in parallel without cluttering your main thread.</li>
-                    </ul>
+                <!-- Page 1: Chapter 1 -->
+                <div class="chapter-container" data-chapter="1">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter I</h3>
+                        <h1 class="chap-title">Advisors & Memory</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>Upgrading to Spring AI 2.0.0 brings significant renames and updates to the advisor infrastructure. The advisor module has been renamed to align with standard conventions: <code>spring-ai-advisors-vector-store</code> is now <code>spring-ai-vector-store-advisor</code>. Similarly, the <code>ToolSearchToolCallingAdvisor</code> has been moved to its own dedicated module, <code>spring-ai-tool-search-advisor</code>.</p>
+                        <p>Furthermore, chat memory order has been updated to set the default memory precedence order to HIGHEST_PRECEDENCE + 200, which sits outside the default tool-calling order. The <code>ToolCallingAdvisor</code> now manages conversation histories internally. If memory is needed inside the loops, developers must disable the internal history and adjust advisor orders manually.</p>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Page 5: Chapter 5 -->
-            <div class="chapter-container" data-chapter="5">
-                <header class="chapter-header">
-                    <h3 class="chap-number">Chapter V</h3>
-                    <h1 class="chap-title">Customizations & Plugin System</h1>
-                </header>
-                <div class="chapter-body">
-                    <p>Antigravity adapts its behavior using a dual-scoped customization system:</p>
-                    <ul>
-                        <li><strong>Global Settings (<code>C:\Users\srira\.gemini\config</code>)</strong>: Houses universally applied rules, style parameters, and system behaviors.</li>
-                        <li><strong>Project Settings (<code>.agents/</code> / Workspace Root)</strong>: Manages workspace-specific rules, library constraints, and folder maps.</li>
-                        <li><strong>Skills (<code>SKILL.md</code>)</strong>: Custom task plans defined by the developer. If a task matches a skill's YAML frontmatter title, the instructions are dynamically loaded into the agent's memory.</li>
-                        <li><strong>Plugins</strong>: Specialized bundles of tool wrappers (such as <code>chrome-devtools-plugin</code> for browser testing and <code>google-antigravity-sdk</code> for SDK access) loaded dynamically based on app profiles.</li>
-                    </ul>
+                <!-- Page 2: Chapter 2 -->
+                <div class="chapter-container" data-chapter="2">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter II</h3>
+                        <h1 class="chap-title">Tool Calling & Execution</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>A key breaking change in Spring AI 2.0.0 is the removal of the <code>internalToolExecutionEnabled</code> flag from the options classes. Model-level internal execution loops are gone; instead, tool execution is driven globally by <code>ToolCallingAdvisor</code> within <code>ChatClient</code>, or driven manually via <code>ToolCallingManager</code> when invoking the model directly.</p>
+                        <p>Additionally, the <code>streamToolCallResponses</code> option has been removed from all advisor builders due to design flaws where request streams and response chunks could corrupt downstream memory records. To audit tool calls dynamically, developers should disable auto-registration and manually drive the tool-calling loop.</p>
+                    </div>
+                </div>
+
+                <!-- Page 3: Chapter 3 -->
+                <div class="chapter-container" data-chapter="3">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter III</h3>
+                        <h1 class="chap-title">Options Immutability & Configuration Changes</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>Options classes, including <code>ChatOptions</code> and <code>EmbeddingOptions</code>, are now strictly immutable. All internal collections are stored as unmodifiable structures. Copy constructors have been removed; modifications must be performed by invoking the new <code>mutate()</code> builder chain pattern instead.</p>
+                        <p>Model configuration properties have also been flattened to remove the <code>.options</code> segment from keys. For example, the property <code>spring.ai.openai.embedding.options.model</code> is now configured directly as <code>spring.ai.openai.embedding.model</code>. Deprecated configurations remain available to guarantee a smooth transition during local builds.</p>
+                    </div>
+                </div>
+
+                <!-- Page 4: Chapter 4 -->
+                <div class="chapter-container" data-chapter="4">
+                    <header class="chapter-header">
+                        <h3 class="chap-number">Chapter IV</h3>
+                        <h1 class="chap-title">Databases & Starters</h1>
+                    </header>
+                    <div class="chapter-body">
+                        <p>Database schemas have updated to support precise message ordering. The <code>JdbcChatMemoryRepository</code> table adds a new <code>sequence_id</code> column (BIGINT) to guarantee correct ordering across MySQL, Postgres, and SQLite, where timestamp precision alone was non-deterministic. Old databases require schemas to be migrated or rebuilt.</p>
+                        <p>New starters are also introduced to facilitate setup: <code>spring-ai-starter-tool-search-advisor</code> provides auto-configurations for semantic tool filtering. These additions drastically reduce boilerplate configurations and allow search indexing type configurations (regex, lucene, vector) out of the box.</p>
+                    </div>
                 </div>
             </div>
         </article>
@@ -678,12 +821,58 @@ flowchart TD
 
     <!-- JS Logic -->
     <script>
+        let currentBook = 'architecture';
         let currentPage = 0;
-        const totalPages = 6;
-        const chapters = document.querySelectorAll('.chapter-container');
-        const tocItems = document.querySelectorAll('.toc-item');
+        
+        const books = {
+            architecture: {
+                title: "Antigravity CLI",
+                meta: "Architectural Guide",
+                audio: "Videos/architecture_audio.wav",
+                totalPages: 6,
+                toc: [
+                    { label: "Title Page", icon: "fa-feather" },
+                    { label: "Chapter I", icon: "fa-layer-group" },
+                    { label: "Chapter II", icon: "fa-arrows-spin" },
+                    { label: "Chapter III", icon: "fa-shield-halved" },
+                    { label: "Chapter IV", icon: "fa-puzzle-piece" },
+                    { label: "Chapter V", icon: "fa-gears" }
+                ]
+            },
+            imp_plan: {
+                title: "Release Pulse Plan",
+                meta: "Implementation Plan",
+                audio: "",
+                totalPages: 5,
+                toc: [
+                    { label: "Title Page", icon: "fa-feather" },
+                    { label: "Chapter I: Objectives", icon: "fa-bullseye" },
+                    { label: "Chapter II: Backend Scraper", icon: "fa-server" },
+                    { label: "Chapter III: Frontend Styles", icon: "fa-palette" },
+                    { label: "Chapter IV: Logic & Tweeter", icon: "fa-hashtag" }
+                ]
+            },
+            upgrade_notes: {
+                title: "Spring AI Upgrades",
+                meta: "Migration Guide",
+                audio: "",
+                totalPages: 5,
+                toc: [
+                    { label: "Title Page", icon: "fa-feather" },
+                    { label: "Chapter I: Advisors", icon: "fa-user-tie" },
+                    { label: "Chapter II: Tool Calling", icon: "fa-wrench" },
+                    { label: "Chapter III: Immutability", icon: "fa-lock" },
+                    { label: "Chapter IV: Databases & Starters", icon: "fa-database" }
+                ]
+            }
+        };
         
         // DOM Elements
+        const bookTitle = document.querySelector('.book-title-area h2');
+        const bookMeta = document.querySelector('.book-title-area span.meta');
+        const tocMenu = document.querySelector('.toc-menu');
+        const audioPlayerWrapper = document.querySelector('.audio-player-wrapper');
+        const audioPlayer = document.getElementById('book-audio');
         const btnPrev = document.getElementById('btn-prev');
         const btnNext = document.getElementById('btn-next');
         const pageIndicator = document.getElementById('page-num-indicator');
@@ -693,11 +882,8 @@ flowchart TD
 
         // Initial Load
         document.addEventListener('DOMContentLoaded', () => {
-            const savedPage = localStorage.getItem('archi_book_page');
-            if (savedPage !== null) {
-                bookmarkRibbon.classList.add('saved');
-            }
-            updateUI();
+            // Initialize default book
+            switchBook('architecture');
 
             // Initialize Mermaid
             if (typeof mermaid !== 'undefined') {
@@ -709,19 +895,74 @@ flowchart TD
             }
         });
 
-        function changePage(direction) {
-            currentPage = Math.max(0, Math.min(totalPages - 1, currentPage + direction));
+        function switchBook(bookKey) {
+            currentBook = bookKey;
+            currentPage = 0;
+            
+            const book = books[bookKey];
+            
+            // Update sidebar labels
+            bookTitle.textContent = book.title;
+            bookMeta.textContent = book.meta;
+            
+            // Toggle HTML sections
+            document.querySelectorAll('.book-section').forEach(sec => {
+                if (sec.id === `book-${bookKey}`) {
+                    sec.style.display = 'block';
+                } else {
+                    sec.style.display = 'none';
+                }
+            });
+            
+            // Update Audio Player visibility and source
+            if (book.audio) {
+                audioPlayerWrapper.style.display = 'flex';
+                audioPlayer.src = book.audio;
+                audioPlayer.load();
+            } else {
+                audioPlayerWrapper.style.display = 'none';
+                audioPlayer.pause();
+                audioPlayer.src = '';
+            }
+            
+            // Build dynamic TOC items
+            tocMenu.innerHTML = '';
+            book.toc.forEach((item, idx) => {
+                const li = document.createElement('li');
+                li.className = `toc-item ${idx === 0 ? 'active' : ''}`;
+                li.dataset.page = idx;
+                li.innerHTML = `<i class="fa-solid ${item.icon}"></i> ${item.label}`;
+                li.addEventListener('click', () => {
+                    currentPage = idx;
+                    updateUI();
+                });
+                tocMenu.appendChild(li);
+            });
+            
+            // Check bookmarks
+            const bookmarkKey = `archi_book_page_${currentBook}`;
+            const savedPage = localStorage.getItem(bookmarkKey);
+            if (savedPage !== null) {
+                bookmarkRibbon.classList.add('saved');
+            } else {
+                bookmarkRibbon.classList.remove('saved');
+            }
+            
             updateUI();
         }
 
-        tocItems.forEach(item => {
-            item.addEventListener('click', () => {
-                currentPage = parseInt(item.dataset.page);
-                updateUI();
-            });
-        });
+        function changePage(direction) {
+            const book = books[currentBook];
+            currentPage = Math.max(0, Math.min(book.totalPages - 1, currentPage + direction));
+            updateUI();
+        }
 
         function updateUI() {
+            const book = books[currentBook];
+            const activeSection = document.getElementById(`book-${currentBook}`);
+            const chapters = activeSection.querySelectorAll('.chapter-container');
+            const tocItems = tocMenu.querySelectorAll('.toc-item');
+            
             chapters.forEach((chap, idx) => {
                 if (idx === currentPage) {
                     chap.classList.add('active');
@@ -739,19 +980,25 @@ flowchart TD
             });
 
             btnPrev.disabled = (currentPage === 0);
-            btnNext.disabled = (currentPage === totalPages - 1);
+            btnNext.disabled = (currentPage === book.totalPages - 1);
 
-            const pct = Math.round((currentPage / (totalPages - 1)) * 100);
+            const pct = Math.round((currentPage / (book.totalPages - 1)) * 100);
             progressFill.style.width = `${pct}%`;
             progressPct.textContent = `${pct}%`;
 
-            pageIndicator.textContent = `Page ${currentPage + 1} of ${totalPages}`;
+            pageIndicator.textContent = `Page ${currentPage + 1} of ${book.totalPages}`;
 
-            const savedPage = localStorage.getItem('archi_book_page');
+            const bookmarkKey = `archi_book_page_${currentBook}`;
+            const savedPage = localStorage.getItem(bookmarkKey);
             if (savedPage !== null && parseInt(savedPage) === currentPage) {
                 bookmarkRibbon.classList.add('saved');
             } else {
                 bookmarkRibbon.classList.remove('saved');
+            }
+            
+            // Re-render mermaid flowcharts if they are initialized
+            if (typeof mermaid !== 'undefined') {
+                mermaid.contentLoaded();
             }
         }
 
@@ -774,13 +1021,15 @@ flowchart TD
         }
 
         function saveBookmark() {
-            localStorage.setItem('archi_book_page', currentPage);
+            const bookmarkKey = `archi_book_page_${currentBook}`;
+            localStorage.setItem(bookmarkKey, currentPage);
             bookmarkRibbon.classList.add('saved');
             showToast(`Bookmark saved on Page ${currentPage + 1}`);
         }
 
         function loadBookmark() {
-            const savedPage = localStorage.getItem('archi_book_page');
+            const bookmarkKey = `archi_book_page_${currentBook}`;
+            const savedPage = localStorage.getItem(bookmarkKey);
             if (savedPage !== null) {
                 currentPage = parseInt(savedPage);
                 updateUI();
