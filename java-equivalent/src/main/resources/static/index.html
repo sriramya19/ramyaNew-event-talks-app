@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Spring AI Release Pulse - Keep track of Spring AI updates, upgrades, and changes. Select updates and tweet them to X.">
+    <title>Spring AI Release Pulse</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dark-theme">
+    <!-- Background glassmorphic gradients -->
+    <div class="background-radial bg-1"></div>
+    <div class="background-radial bg-2"></div>
+
+    <div class="app-wrapper">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-inner">
+                <div class="logo-section">
+                    <div class="logo-container">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <div class="title-details">
+                        <h1>Spring AI Release Pulse</h1>
+                        <p class="subtitle">Real-time Upgrade Notes Monitor & Twitter Composer</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="theme-toggle" class="btn-icon" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <button id="export-csv-btn" class="btn btn-secondary">
+                        <i class="fa-solid fa-file-csv"></i>
+                        <span>Export CSV</span>
+                    </button>
+                    <button id="refresh-btn" class="btn btn-primary">
+                        <i id="refresh-icon" class="fa-solid fa-arrows-rotate"></i>
+                        <span>Sync Notes</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Section -->
+        <section class="stats-overview" aria-label="Quick metrics">
+            <div class="stat-card accent-green">
+                <div class="stat-icon"><i class="fa-solid fa-code-branch"></i></div>
+                <div class="stat-content">
+                    <span class="stat-label">Latest Version</span>
+                    <span class="stat-value" id="val-latest-version">Loading...</span>
+                </div>
+            </div>
+            <div class="stat-card accent-blue">
+                <div class="stat-icon"><i class="fa-solid fa-bullseye"></i></div>
+                <div class="stat-content">
+                    <span class="stat-label">Total Updates</span>
+                    <span class="stat-value" id="val-total-updates">0</span>
+                </div>
+            </div>
+            <div class="stat-card accent-purple">
+                <div class="stat-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <div class="stat-content">
+                    <span class="stat-label">Advisors & Tooling</span>
+                    <span class="stat-value" id="val-tooling-updates">0</span>
+                </div>
+            </div>
+            <div class="stat-card accent-orange">
+                <div class="stat-icon"><i class="fa-solid fa-database"></i></div>
+                <div class="stat-content">
+                    <span class="stat-label">Vector Databases</span>
+                    <span class="stat-value" id="val-db-updates">0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Control Bar -->
+        <section class="controls-bar" aria-label="Search and Filter Controls">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="search-bar" placeholder="Search Spring AI release notes (e.g. advisor, ToolCalling, memory)..." aria-label="Search updates">
+                <button id="clear-search-btn" class="clear-btn" aria-label="Clear search"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="filter-wrapper">
+                <span class="filter-title">Topic:</span>
+                <div class="filter-pills" id="filter-pills-container">
+                    <button class="pill active" data-filter="all">All Updates</button>
+                    <!-- Pills dynamically populated or hardcoded for layout -->
+                    <button class="pill" data-filter="Advisors">Advisors</button>
+                    <button class="pill" data-filter="Tool Calling & MCP">Tool Calling & MCP</button>
+                    <button class="pill" data-filter="Models & Providers">Models & Providers</button>
+                    <button class="pill" data-filter="Vector Databases">Vector DBs</button>
+                    <button class="pill" data-filter="Structured Output">Structured Output</button>
+                    <button class="pill" data-filter="General">General</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Selection Hint Banner -->
+        <div id="selection-tip" class="selection-tip">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Tip: Click on update cards below to select and compile them into a Tweet draft automatically.</span>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="main-layout">
+            <!-- Loading State -->
+            <div id="loading-state" class="state-container">
+                <div class="loader-spinner"></div>
+                <p>Scraping upgrade-notes.html from Spring Docs...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-state" class="state-container hidden">
+                <div class="error-badge"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h2>Retrieval Failure</h2>
+                <p id="error-message-text">Failed to fetch release notes from the Spring documentation server.</p>
+                <button id="retry-btn" class="btn btn-secondary">Retry Sync</button>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="state-container hidden">
+                <div class="empty-badge"><i class="fa-solid fa-clipboard-question"></i></div>
+                <h2>No Updates Match Search Criteria</h2>
+                <p>Try clearing your keyword filters or checking other categories.</p>
+            </div>
+
+            <!-- Timeline -->
+            <div id="timeline-wrapper" class="timeline-wrapper hidden">
+                <!-- Grouped timeline updates go here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Floating Tweet Composer Drawer -->
+    <div id="tweet-drawer" class="tweet-drawer collapsed">
+        <div class="drawer-header">
+            <div class="drawer-title">
+                <i class="fa-brands fa-x-twitter"></i>
+                <span>Tweet Composer</span>
+                <span class="badge" id="selected-badge">0 selected</span>
+            </div>
+            <button id="close-drawer-btn" class="btn-close" aria-label="Close composer"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="drawer-body">
+            <div class="textarea-container">
+                <textarea id="tweet-textarea" placeholder="Select release updates above to prefill and draft your tweet here..."></textarea>
+                <div class="char-progress-bar" id="char-progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="char-details">
+                    <span id="char-count-text">0 / 280</span>
+                </div>
+            </div>
+            <div class="drawer-actions">
+                <button id="clear-selection-btn" class="btn btn-secondary flex-grow-1">
+                    <i class="fa-solid fa-trash-can"></i> Clear
+                </button>
+                <button id="copy-tweet-btn" class="btn btn-secondary">
+                    <i class="fa-solid fa-copy"></i> Copy
+                </button>
+                <button id="post-x-btn" class="btn btn-twitter flex-grow-2">
+                    <i class="fa-brands fa-x-twitter"></i> Post to X
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Back to Top Button -->
+    <button id="scroll-top-btn" class="scroll-top-btn hidden" title="Go to top" aria-label="Go to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
